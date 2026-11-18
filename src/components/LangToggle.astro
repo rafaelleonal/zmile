@@ -1,0 +1,25 @@
+---
+import type { Lang } from '../data/site';
+import { useT } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  alternates: { es: string; en: string };
+}
+
+const { lang, alternates } = Astro.props;
+const t = useT(lang);
+
+const on = 'px-2.5 py-1.5 compact:px-3 compact:py-3.5 transition-colors bg-foreground text-background';
+const off = 'px-2.5 py-1.5 compact:px-3 compact:py-3.5 transition-colors text-muted-foreground hover:text-foreground';
+---
+
+<div
+  role="group"
+  aria-label={t('lang.aria')}
+  class="inline-flex items-center text-xs uppercase tracking-[0.22em] border border-border rounded-sm overflow-hidden"
+>
+  <a href={alternates.es} hreflang="es-MX" lang="es" data-lang-switch data-astro-prefetch="load" class={lang === 'es' ? on : off} aria-current={lang === 'es' ? 'true' : undefined}>ES</a>
+  <span class="w-px h-4 bg-border" aria-hidden="true"></span>
+  <a href={alternates.en} hreflang="en" lang="en" data-lang-switch data-astro-prefetch="load" class={lang === 'en' ? on : off} aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
+</div>

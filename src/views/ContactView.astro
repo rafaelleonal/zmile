@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactInfo from '../components/ContactInfo.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import { site, type Lang } from '../data/site';
+import { routes, useT } from '../i18n/ui';
+import { breadcrumbSchema } from '../lib/seo';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useT(lang);
+
+const meta = {
+  es: {
+    title: 'Contacto y ubicación — Dentista en Roma Sur, CDMX | Zmile',
+    description: `Visítanos en ${site.address.display.es}. Teléfono y WhatsApp ${site.phone.display}. Abierto de lunes a domingo de 9:00 a 20:00.`,
+  },
+  en: {
+    title: 'Contact & location — Dentist in Roma Sur, Mexico City | Zmile',
+    description: `Visit us at ${site.address.display.en}. Phone and WhatsApp +52 ${site.phone.display}. Open Monday to Sunday, 9 am to 8 pm.`,
+  },
+}[lang];
+---
+
+<Base
+  lang={lang}
+  title={meta.title}
+  description={meta.description}
+  alternates={routes.contact}
+  active="contact"
+  schema={[
+    breadcrumbSchema(Astro.site!, [
+      { name: t('crumb.home'), path: routes.home[lang] },
+      { name: t('nav.contact'), path: routes.contact[lang] },
+    ]),
+  ]}
+>
+  <div class="container-luxe py-20 md:py-28 compact:pt-11 compact:pb-16">
+    <p class="eyebrow">{t('contact.eyebrow')}</p>
+    <h1 class="mt-4 text-4xl md:text-6xl font-light tracking-tight max-w-2xl">{t('contact.title')}</h1>
+    <div class="mt-16 compact:mt-8 grid lg:grid-cols-2 gap-12 compact:gap-8 lg:gap-20">
+      <ContactInfo lang={lang} directions />
+      <MapEmbed lang={lang} />
+    </div>
+  </div>
+</Base>

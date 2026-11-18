@@ -1,0 +1,12 @@
+---
+import SpecialtyView from '../../views/SpecialtyView.astro';
+import { specialties } from '../../data/specialties';
+
+export function getStaticPaths() {
+  return specialties.map((specialty) => ({ params: { slug: specialty.es.slug }, props: { specialty } }));
+}
+
+const { specialty } = Astro.props;
+---
+
+<SpecialtyView lang="es" specialty={specialty} />

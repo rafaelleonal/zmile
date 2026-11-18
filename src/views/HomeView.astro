@@ -1,0 +1,88 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import SpecialtyGrid from '../components/SpecialtyGrid.astro';
+import Reviews from '../components/Reviews.astro';
+import ContactInfo from '../components/ContactInfo.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import FaqList from '../components/FaqList.astro';
+import CtaSection from '../components/CtaSection.astro';
+import { homeFaqs } from '../data/content';
+import type { Lang } from '../data/site';
+import { routes, useT } from '../i18n/ui';
+import { faqSchema } from '../lib/seo';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useT(lang);
+const faqs = homeFaqs(lang);
+
+const meta = {
+  es: {
+    title: 'Dentista en Roma Sur, CDMX | Zmile Dental Clinic',
+    description:
+      'Clínica dental de especialidades en Tepic 139, Roma Sur, CDMX: ortodoncia, implantes, endodoncia y estética dental. Abierto de lunes a domingo, 9:00 a 20:00. Agenda por WhatsApp.',
+  },
+  en: {
+    title: 'Dentist in Roma Sur, Mexico City | Zmile Dental Clinic',
+    description:
+      'Specialty dental clinic at Tepic 139, Roma Sur, Mexico City: orthodontics, implants, root canals and cosmetic dentistry. Open Monday to Sunday, 9 am to 8 pm. Book via WhatsApp.',
+  },
+}[lang];
+---
+
+<Base lang={lang} title={meta.title} description={meta.description} alternates={routes.home} active="home" schema={[faqSchema(faqs)]} heroCta>
+  <Hero lang={lang} />
+
+  <section class="py-24 md:py-32 compact:py-16" id={lang === 'en' ? 'specialties' : 'especialidades'}>
+    <div class="container-luxe">
+      <div class="grid md:grid-cols-12 gap-10 compact:gap-3.5 items-end mb-16 compact:mb-9">
+        <div class="md:col-span-7">
+          <p class="eyebrow">{t('home.servicesEyebrow')}</p>
+          <h2 class="mt-4 text-3xl md:text-5xl font-light tracking-tight">{t('home.servicesTitle')}</h2>
+        </div>
+        <div class="md:col-span-5">
+          <p class="text-muted-foreground leading-relaxed">{t('home.servicesIntro')}</p>
+        </div>
+      </div>
+      <SpecialtyGrid lang={lang} />
+    </div>
+  </section>
+
+  <Reviews lang={lang} />
+
+  <section class="py-24 md:py-32 compact:py-16" id={lang === 'en' ? 'location' : 'ubicacion'}>
+    <div class="container-luxe">
+      <div class="grid md:grid-cols-12 gap-10 compact:gap-3.5 items-end mb-16 compact:mb-9">
+        <div class="md:col-span-7">
+          <p class="eyebrow">{t('loc.eyebrow')}</p>
+          <h2 class="mt-4 text-3xl md:text-5xl font-light tracking-tight">{t('loc.title')}</h2>
+        </div>
+        <div class="md:col-span-5">
+          <p class="text-muted-foreground leading-relaxed">{t('loc.intro')}</p>
+        </div>
+      </div>
+      <div class="grid lg:grid-cols-2 gap-12 compact:gap-8 lg:gap-20">
+        <ContactInfo lang={lang} directions />
+        <MapEmbed lang={lang} />
+      </div>
+    </div>
+  </section>
+
+  <section class="py-24 md:py-32 compact:py-16 bg-secondary/40" id={lang === 'en' ? 'faq' : 'preguntas-frecuentes'}>
+    <div class="container-luxe">
+      <div class="max-w-2xl mx-auto text-center mb-16 compact:mb-9">
+        <p class="eyebrow">{t('faq.eyebrow')}</p>
+        <h2 class="mt-4 text-3xl md:text-5xl font-light tracking-tight">{t('faq.title')}</h2>
+      </div>
+      <div class="max-w-3xl mx-auto">
+        <FaqList faqs={faqs} />
+      </div>
+    </div>
+  </section>
+
+  <CtaSection lang={lang} />
+</Base>

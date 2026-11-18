@@ -1,0 +1,30 @@
+---
+import WhatsAppButton from './WhatsAppButton.astro';
+import type { Lang } from '../data/site';
+import { routes, useT } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  /** Id de especialidad para preseleccionarla en el formulario. */
+  specialty?: string;
+}
+
+const { lang, title, specialty } = Astro.props;
+const t = useT(lang);
+const href = specialty ? `${routes.appointment[lang]}?s=${specialty}` : routes.appointment[lang];
+---
+
+<div class="hairline"></div>
+<section class="py-24 md:py-32 compact:py-16">
+  <div class="container-luxe text-center max-w-3xl mx-auto">
+    <p class="eyebrow">{t('home.cta.eyebrow')}</p>
+    <h2 class="mt-4 text-3xl md:text-5xl font-light tracking-tight">{title ?? t('home.cta.title')}</h2>
+    <div class="mt-10 flex flex-wrap justify-center gap-3 compact:mt-[26px] compact:grid compact:grid-cols-2 compact:gap-2">
+      <a href={href} class="rounded-sm bg-foreground text-background px-7 compact:px-2.5 py-4 text-sm compact:text-center hover:bg-primary transition-colors">
+        {t('cta.bookShort')}
+      </a>
+      <WhatsAppButton lang={lang} class="compact:px-2.5" />
+    </div>
+  </div>
+</section>

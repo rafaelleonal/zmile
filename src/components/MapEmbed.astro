@@ -1,0 +1,21 @@
+---
+import { site, type Lang } from '../data/site';
+import { useT } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useT(lang);
+---
+
+<div class="aspect-square compact:aspect-[4/3] lg:aspect-auto rounded-sm overflow-hidden border border-border bg-secondary">
+  <iframe
+    title={t('contact.mapTitle')}
+    src={`${site.google.embedUrl}&hl=${lang}`}
+    class="w-full h-full min-h-[420px] compact:min-h-0"
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    allowfullscreen></iframe>
+</div>

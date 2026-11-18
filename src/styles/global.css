@@ -1,0 +1,228 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/dm-sans/wght.css';
+
+/* ── Tokens del diseño aprobado (idénticos al sitio original) ───────────── */
+:root {
+  --radius: 0.25rem;
+  --ivory: #fff;
+  --stone-1: #c4c1bc;
+  --taupe: #928f8c;
+  --clay: #937869;
+  --ink: #000;
+
+  --background: var(--ivory);
+  --foreground: var(--ink);
+  --primary: var(--clay);
+  --primary-foreground: var(--ivory);
+  --secondary: #f5f3f0;
+  --secondary-foreground: var(--ink);
+  --muted: #f5f3f0;
+  --muted-foreground: var(--taupe);
+  --accent: var(--stone-1);
+  --accent-foreground: var(--ink);
+  --destructive: #cc2827;
+  --border: #e6e4e1;
+  --input: #e6e4e1;
+  --ring: var(--clay);
+
+  /* Verde de marca de WhatsApp (solo para sus botones). */
+  --whatsapp: #25d366;
+  --whatsapp-hover: #1ebe5a;
+}
+
+@theme inline {
+  --font-sans: 'DM Sans Variable', 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'DM Sans Variable', 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-whatsapp: var(--whatsapp);
+  --color-whatsapp-hover: var(--whatsapp-hover);
+
+  /* En el original rounded-sm = calc(var(--radius) - 4px) = 0: esquinas rectas. */
+  --radius-sm: 0px;
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+
+  --animate-fade-in: fade-in 0.8s ease-out both;
+  --animate-float-in: float-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  @keyframes float-in {
+    0% {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+  summary {
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+/* Variante `compact:` — ajustes solo para celular (menos de 768 px), activos cuando
+   <html> lleva data-mobile-compact (bandera site.design.mobileCompact). Las clases
+   originales del diseño se conservan intactas junto a ellas. */
+@custom-variant compact {
+  @media (max-width: 47.9988rem) {
+    :where(html[data-mobile-compact]) & {
+      @slot;
+    }
+  }
+}
+
+@utility container-luxe {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+@utility eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  color: var(--color-muted-foreground);
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+@utility hairline {
+  background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+  height: 1px;
+}
+
+@utility shadow-luxe {
+  box-shadow: 0 30px 80px -40px color-mix(in oklab, var(--ink) 35%, transparent);
+}
+
+@media (max-width: 47.9988rem) {
+  html[data-mobile-compact] .eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+  }
+}
+
+/* ── Modal de especialidad (<dialog> nativo, mismo aspecto que el original) ─ */
+dialog.spec-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: calc(100% - 2rem);
+  max-width: 28rem;
+  opacity: 0;
+  scale: 0.95;
+  transition:
+    opacity 0.2s ease,
+    scale 0.2s ease,
+    overlay 0.2s ease allow-discrete,
+    display 0.2s ease allow-discrete;
+}
+dialog.spec-dialog[open] {
+  opacity: 1;
+  scale: 1;
+}
+@starting-style {
+  dialog.spec-dialog[open] {
+    opacity: 0;
+    scale: 0.95;
+  }
+}
+dialog.spec-dialog::backdrop {
+  background: rgb(0 0 0 / 0);
+  transition:
+    background 0.2s ease,
+    overlay 0.2s ease allow-discrete,
+    display 0.2s ease allow-discrete;
+}
+dialog.spec-dialog[open]::backdrop {
+  background: rgb(0 0 0 / 0.8);
+}
+@starting-style {
+  dialog.spec-dialog[open]::backdrop {
+    background: rgb(0 0 0 / 0);
+  }
+}
+
+/* ── Cambio de idioma sin recarga: sin animación de entrada, fundido corto ── */
+html[data-lang-switch] .animate-float-in,
+html[data-lang-switch] .animate-fade-in {
+  animation: none;
+}
+html[data-lang-switch]::view-transition-old(root),
+html[data-lang-switch]::view-transition-new(root) {
+  animation-duration: 0.18s;
+}
+
+/* ── Preguntas frecuentes ───────────────────────────────────────────────── */
+details.faq[open] .faq-chevron {
+  rotate: 180deg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

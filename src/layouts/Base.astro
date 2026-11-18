@@ -1,0 +1,133 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFab from '../components/WhatsAppFab.astro';
+import MobileCtaBar from '../components/MobileCtaBar.astro';
+import { site, type Lang } from '../data/site';
+import { htmlLang, ogLocale, type RouteKey } from '../i18n/ui';
+import { clinicSchema, websiteSchema, webPageSchema } from '../lib/seo';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  /** Ruta de esta página en cada idioma (para hreflang y el selector ES/EN). */
+  alternates: { es: string; en: string };
+  /** Sección activa del menú. */
+  active?: RouteKey;
+  /** Nodos JSON-LD adicionales para esta página. */
+  schema?: object[];
+  noindex?: boolean;
+  /** La página abre con botones de cita propios: la barra fija espera a que salgan de pantalla. */
+  heroCta?: boolean;
+}
+
+const { lang, title, description, alternates, active, schema = [], noindex = false, heroCta = false } = Astro.props;
+const compact = site.design.mobileCompact;
+
+// En la página del formulario la barra estorbaría al teclado y sería redundante.
+const showBar = site.design.mobileCtaBar && active !== 'appointment';
+
+const base = Astro.site!;
+const canonical = new URL(alternates[lang], base).href;
+const ogImage = new URL('/og.jpg', base).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    clinicSchema(base, lang),
+    websiteSchema(base),
+    webPageSchema(base, { url: canonical, title, description, lang }),
+    ...schema,
+  ],
+};
+---
+
+<!doctype html>
+<html lang={htmlLang[lang]} data-mobile-compact={compact ? '' : undefined}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={site.name} />
+    {noindex ? <meta name="robots" content="noindex" /> : <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="es-MX" href={new URL(alternates.es, base).href} />
+    <link rel="alternate" hreflang="en" href={new URL(alternates.en, base).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL(alternates.es, base).href} />
+
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- Señales de ubicación para búsquedas locales -->
+    <meta name="geo.region" content="MX-CMX" />
+    <meta name="geo.placename" content={`${site.address.neighborhood}, ${site.address.city}`} />
+    <meta name="geo.position" content={`${site.geo.lat};${site.geo.lng}`} />
+    <meta name="ICBM" content={`${site.geo.lat}, ${site.geo.lng}`} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={ogLocale[lang]} />
+    <meta property="og:locale:alternate" content={ogLocale[lang === 'es' ? 'en' : 'es']} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name} — ${site.address.neighborhood}, CDMX`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Resumen del sitio para asistentes de IA -->
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Navegación sin recarga completa, con transición entre páginas -->
+    <ClientRouter />
+  </head>
+  <body>
+    <div class="min-h-screen flex flex-col">
+      <Header lang={lang} alternates={alternates} active={active} />
+      <main class="flex-1">
+        <slot />
+      </main>
+      <Footer lang={lang} />
+      <WhatsAppFab lang={lang} hideOnMobile={showBar || (compact && active === 'appointment')} />
+      {showBar && <MobileCtaBar lang={lang} afterHero={compact && heroCta} />}
+      {showBar && <div class="md:hidden h-[4.75rem]" aria-hidden="true" />}
+    </div>
+  </body>
+</html>
+
+<script>
+  // Cambio de idioma: se conserva la posición de lectura y no se repite la animación
+  // de entrada, para que solo cambien los textos y no parezca que la página recarga.
+  let langSwitchScroll: number | null = null;
+
+  document.addEventListener(
+    'click',
+    (e) => {
+      const link = (e.target as HTMLElement).closest('a[data-lang-switch]');
+      const plainClick = e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
+      langSwitchScroll = link && plainClick ? window.scrollY : null;
+    },
+    true,
+  );
+  document.addEventListener('astro:before-swap', (e) => {
+    if (langSwitchScroll !== null) e.newDocument.documentElement.dataset.langSwitch = '';
+  });
+  document.addEventListener('astro:after-swap', () => {
+    if (langSwitchScroll === null) return;
+    window.scrollTo({ top: langSwitchScroll, behavior: 'instant' });
+    langSwitchScroll = null;
+  });
+</script>

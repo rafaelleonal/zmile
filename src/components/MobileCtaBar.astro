@@ -1,0 +1,64 @@
+---
+import WhatsAppButton from './WhatsAppButton.astro';
+import type { Lang } from '../data/site';
+import { routes, useT } from '../i18n/ui';
+
+// Barra fija inferior, solo en celular: las dos acciones principales (agendar y
+// WhatsApp) siempre a la vista y al alcance del pulgar.
+interface Props {
+  lang: Lang;
+  /**
+   * La página abre con sus propios botones de cita (`data-hero-cta`): la barra espera
+   * oculta y aparece cuando esos botones salen de la pantalla, para no duplicarlos.
+   */
+  afterHero?: boolean;
+}
+
+const { lang, afterHero = false } = Astro.props;
+const t = useT(lang);
+---
+
+<div
+  data-cta-bar
+  data-after-hero={afterHero ? '' : undefined}
+  data-hidden={afterHero ? '' : undefined}
+  class="md:hidden fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 backdrop-blur-md px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-transform duration-300 data-[hidden]:translate-y-full"
+>
+  <div class="grid grid-cols-2 gap-2">
+    <a
+      href={routes.appointment[lang]}
+      class="inline-flex items-center justify-center rounded-sm bg-foreground text-background px-3 py-3.5 text-sm tracking-wide"
+    >
+      {t('cta.book')}
+    </a>
+    <WhatsAppButton lang={lang} class="px-3! py-3.5!" />
+  </div>
+</div>
+{
+  afterHero && (
+    <noscript>
+      <style>{`[data-cta-bar][data-hidden]{transform:none!important}`}</style>
+    </noscript>
+  )
+}
+
+<script>
+  let observer: IntersectionObserver | undefined;
+
+  document.addEventListener('astro:page-load', () => {
+    observer?.disconnect();
+    const bar = document.querySelector<HTMLElement>('[data-cta-bar][data-after-hero]');
+    const heroCta = document.querySelector('[data-hero-cta]');
+    if (!bar) return;
+    if (!heroCta) {
+      bar.removeAttribute('data-hidden');
+      return;
+    }
+    // Oculta mientras los botones del hero se ven; visible en cuanto salen de pantalla.
+    observer = new IntersectionObserver(([entry]) => {
+      bar.toggleAttribute('data-hidden', entry.isIntersecting);
+      bar.toggleAttribute('inert', entry.isIntersecting);
+    });
+    observer.observe(heroCta);
+  });
+</script>

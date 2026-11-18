@@ -1,0 +1,35 @@
+---
+import Icon from './Icon.astro';
+import WhatsAppIcon from './WhatsAppIcon.astro';
+import { site, whatsappMessage, whatsappUrl, type Lang } from '../data/site';
+import { useT } from '../i18n/ui';
+
+// Botón de WhatsApp. Con `site.design.whatsappGreen` usa el verde y el logotipo de
+// WhatsApp; sin él, el estilo de contorno del diseño original.
+interface Props {
+  lang: Lang;
+  message?: string;
+  label?: string;
+  class?: string;
+}
+
+const { lang, message, label, class: className } = Astro.props;
+const t = useT(lang);
+const green = site.design.whatsappGreen;
+---
+
+<a
+  href={whatsappUrl(message ?? whatsappMessage[lang])}
+  target="_blank"
+  rel="noopener noreferrer"
+  class:list={[
+    'inline-flex items-center justify-center gap-2 rounded-sm px-7 py-4 text-sm tracking-wide transition-colors',
+    green
+      ? 'bg-whatsapp text-white font-medium hover:bg-whatsapp-hover'
+      : 'border border-foreground/20 hover:border-foreground',
+    className,
+  ]}
+>
+  {green ? <WhatsAppIcon size={16} /> : <Icon name="message-circle" size={16} />}
+  {label ?? t('cta.whatsapp')}
+</a>

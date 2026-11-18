@@ -1,0 +1,225 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import WhatsAppIcon from '../components/WhatsAppIcon.astro';
+import { site, whatsappMessage, whatsappUrl, type Lang } from '../data/site';
+import { specialties } from '../data/specialties';
+import { routes, useT } from '../i18n/ui';
+import { breadcrumbSchema } from '../lib/seo';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useT(lang);
+
+const meta = {
+  es: {
+    title: 'Agenda tu cita dental en Roma Sur, CDMX | Zmile Dental Clinic',
+    description:
+      'Solicita tu cita con los especialistas de Zmile Dental Clinic en Tepic 139, Roma Sur, CDMX. Llena el formulario y confírmala por WhatsApp. Abierto de lunes a domingo.',
+  },
+  en: {
+    title: 'Book a dental appointment in Roma Sur, Mexico City | Zmile',
+    description:
+      'Request an appointment with the specialists at Zmile Dental Clinic, Tepic 139, Roma Sur, Mexico City. Fill out the form and confirm via WhatsApp. Open Monday to Sunday.',
+  },
+}[lang];
+
+// Horarios cada 30 min dentro del horario de la clínica (09:00 – 19:30).
+const [openH] = site.hours.opens.split(':').map(Number);
+const [closeH] = site.hours.closes.split(':').map(Number);
+const times: string[] = [];
+for (let h = openH; h < closeH; h++) {
+  times.push(`${String(h).padStart(2, '0')}:00`, `${String(h).padStart(2, '0')}:30`);
+}
+
+const input =
+  'w-full bg-transparent border-0 border-b border-border focus:border-foreground focus:outline-none py-3 text-base placeholder:text-muted-foreground/60 transition-colors rounded-none';
+const label = 'block text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2';
+
+// Etiquetas del mensaje de WhatsApp, que arma el script del formulario.
+const wa = {
+  greeting: t('appt.wa.greeting'),
+  name: t('appt.wa.name'),
+  phone: t('appt.wa.phone'),
+  email: t('appt.wa.email'),
+  specialty: t('appt.wa.specialty'),
+  date: t('appt.wa.date'),
+  time: t('appt.wa.time'),
+  reason: t('appt.wa.reason'),
+};
+---
+
+<Base
+  lang={lang}
+  title={meta.title}
+  description={meta.description}
+  alternates={routes.appointment}
+  active="appointment"
+  schema={[
+    breadcrumbSchema(Astro.site!, [
+      { name: t('crumb.home'), path: routes.home[lang] },
+      { name: t('cta.book'), path: routes.appointment[lang] },
+    ]),
+  ]}
+>
+  <div class="container-luxe py-20 md:py-28 compact:pt-11 compact:pb-16 grid lg:grid-cols-12 gap-16 compact:gap-9" data-appt-form-view>
+    <div class="lg:col-span-4">
+      <p class="eyebrow">{t('appt.eyebrow')}</p>
+      <h1 class="mt-4 text-4xl md:text-5xl font-light tracking-tight">{t('appt.title')}</h1>
+      <p class="mt-6 text-muted-foreground leading-relaxed">{t('appt.intro')}</p>
+      <div class="mt-10 space-y-3 text-sm text-muted-foreground">
+        <p class="text-foreground">{t('appt.hours')}: {site.hours.display[lang]}</p>
+        <address class="text-foreground not-italic">{site.address.display[lang]}</address>
+      </div>
+    </div>
+
+    <form
+      class="lg:col-span-8 grid sm:grid-cols-2 gap-x-8 gap-y-8 compact:gap-y-[22px]"
+      data-appt-form
+      data-phone={site.phone.raw}
+      data-locale={lang === 'en' ? 'en-US' : 'es-MX'}
+      data-wa={JSON.stringify(wa)}
+    >
+      <div class="sm:col-span-2">
+        <label class={label} for="patient_name">{t('appt.field.name')}</label>
+        <input required id="patient_name" name="patient_name" autocomplete="name" maxlength="120" placeholder={t('appt.placeholder.name')} class={input} />
+      </div>
+      <div>
+        <label class={label} for="phone">{t('appt.field.phone')}</label>
+        <input required id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" minlength="6" maxlength="30" placeholder="55 0000 0000" class={input} />
+      </div>
+      <div>
+        <label class={label} for="email">
+          {t('appt.field.email')}{' '}<span class="normal-case tracking-normal text-muted-foreground/70">({t('appt.optional')})</span>
+        </label>
+        <input id="email" name="email" type="email" autocomplete="email" maxlength="200" placeholder="tu@email.com" class={input} />
+      </div>
+      <div>
+        <label class={label} for="specialty">{t('appt.field.specialty')}</label>
+        <select required id="specialty" name="specialty" class={input}>
+          <option value="" selected>{t('appt.select')}</option>
+          {specialties.map((s) => <option value={s[lang].name} data-id={s.id}>{s[lang].name}</option>)}
+        </select>
+      </div>
+      <div>
+        <label class={label} for="date">{t('appt.field.date')}</label>
+        <input required id="date" name="date" type="date" class={input} />
+      </div>
+      <div>
+        <label class={label} for="time">{t('appt.field.time')}</label>
+        <select required id="time" name="time" class={input}>
+          <option value="" selected>{t('appt.select')}</option>
+          {times.map((time) => <option value={time}>{time}</option>)}
+        </select>
+        <p class="mt-2 text-xs text-muted-foreground leading-relaxed">{t('appt.timeNote')}</p>
+      </div>
+      <div class="sm:col-span-2">
+        <label class={label} for="reason">{t('appt.field.reason')}</label>
+        <textarea id="reason" name="reason" rows="3" maxlength="1000" placeholder={t('appt.placeholder.reason')} class={`${input} resize-none`}></textarea>
+      </div>
+      <div class="sm:col-span-2 pt-4">
+        <button
+          type="submit"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-sm bg-foreground text-background px-8 py-4 text-sm tracking-wide hover:bg-primary transition-colors disabled:opacity-60"
+        >
+          <WhatsAppIcon size={16} />
+          {t('appt.submit')}
+        </button>
+        <p class="mt-4 text-xs text-muted-foreground leading-relaxed">{t('appt.submitNote')}</p>
+        <noscript>
+          <p class="mt-4 text-sm text-muted-foreground">
+            {t('appt.noscript')}
+            <a class="text-primary underline" href={whatsappUrl(whatsappMessage[lang])}>{site.phone.display}</a>
+          </p>
+        </noscript>
+      </div>
+    </form>
+  </div>
+
+  <div class="container-luxe py-32 text-center" data-appt-success hidden>
+    <span class="inline-grid place-items-center h-16 w-16 rounded-full bg-primary text-primary-foreground">
+      <Icon name="check" size={28} />
+    </span>
+    <h2 class="mt-8 text-4xl font-light">{t('appt.successTitle')}</h2>
+    <p class="mt-4 text-muted-foreground max-w-md mx-auto">{t('appt.successBody')}</p>
+    <a
+      href={whatsappUrl(whatsappMessage[lang])}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-appt-retry
+      class="mt-10 inline-flex items-center gap-2 rounded-sm bg-whatsapp text-white font-medium px-7 py-4 text-sm tracking-wide hover:bg-whatsapp-hover transition-colors"
+    >
+      <WhatsAppIcon size={16} />
+      {t('appt.successRetry')}
+    </a>
+  </div>
+</Base>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const form = document.querySelector<HTMLFormElement>('[data-appt-form]');
+    if (!form) return;
+
+    const dateInput = form.querySelector<HTMLInputElement>('#date')!;
+    const specialty = form.querySelector<HTMLSelectElement>('#specialty')!;
+
+    // No permitir fechas pasadas.
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    dateInput.min = today;
+
+    // Preselección de especialidad: /agenda/?s=orthodontics
+    const wanted = new URLSearchParams(location.search).get('s');
+    if (wanted) {
+      const option = Array.from(specialty.options).find((o) => o.dataset.id === wanted);
+      if (option) specialty.value = option.value;
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+
+      const data = new FormData(form);
+      const get = (key: string) => String(data.get(key) ?? '').trim();
+      const labels = JSON.parse(form.dataset.wa!) as Record<string, string>;
+
+      // "2026-11-20" → "viernes, 20 de noviembre de 2026"
+      const [y, m, d] = get('date').split('-').map(Number);
+      const prettyDate = new Date(y, m - 1, d).toLocaleDateString(form.dataset.locale, {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
+
+      const lines = [
+        labels.greeting,
+        '',
+        `*${labels.name}:* ${get('patient_name')}`,
+        `*${labels.phone}:* ${get('phone')}`,
+        get('email') ? `*${labels.email}:* ${get('email')}` : null,
+        `*${labels.specialty}:* ${get('specialty')}`,
+        `*${labels.date}:* ${prettyDate}`,
+        `*${labels.time}:* ${get('time')}`,
+        get('reason') ? `*${labels.reason}:* ${get('reason')}` : null,
+      ].filter((line): line is string => line !== null);
+
+      const url = `https://wa.me/${form.dataset.phone}?text=${encodeURIComponent(lines.join('\n'))}`;
+
+      const success = document.querySelector<HTMLElement>('[data-appt-success]');
+      const retry = document.querySelector<HTMLAnchorElement>('[data-appt-retry]');
+      if (retry) retry.href = url;
+
+      const opened = window.open(url, '_blank');
+      if (opened) opened.opener = null;
+      document.querySelector<HTMLElement>('[data-appt-form-view]')?.setAttribute('hidden', '');
+      success?.removeAttribute('hidden');
+      window.scrollTo({ top: 0 });
+      // Si el navegador bloqueó la ventana nueva, abrir WhatsApp en esta misma pestaña.
+      if (!opened) location.href = url;
+    });
+  });
+</script>

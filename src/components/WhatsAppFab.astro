@@ -1,0 +1,31 @@
+---
+import Icon from './Icon.astro';
+import WhatsAppIcon from './WhatsAppIcon.astro';
+import { site, whatsappMessage, whatsappUrl, type Lang } from '../data/site';
+import { useT } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  /** En celular lo sustituye la barra fija inferior. */
+  hideOnMobile?: boolean;
+}
+
+const { lang, hideOnMobile = false } = Astro.props;
+const t = useT(lang);
+const green = site.design.whatsappGreen;
+---
+
+<a
+  href={whatsappUrl(whatsappMessage[lang])}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={t('wa.aria')}
+  class:list={[
+    'fixed bottom-6 right-6 z-50 group items-center gap-3 rounded-full pl-4 pr-5 py-3 shadow-luxe transition-all duration-300 hover:scale-105',
+    hideOnMobile ? 'hidden md:flex' : 'flex',
+    green ? 'bg-whatsapp text-white hover:bg-whatsapp-hover' : 'bg-foreground text-background hover:bg-primary',
+  ]}
+>
+  {green ? <WhatsAppIcon size={20} /> : <Icon name="message-circle" size={20} />}
+  <span class:list={['text-sm tracking-wide hidden sm:inline', green && 'font-medium']}>WhatsApp</span>
+</a>

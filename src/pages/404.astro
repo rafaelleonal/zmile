@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import { routes, useT } from '../i18n/ui';
+
+const t = useT('es');
+---
+
+<Base lang="es" title={`${t('nf.title')} | Zmile Dental Clinic`} description={t('nf.body')} alternates={routes.home} noindex>
+  <div class="container-luxe py-32 text-center">
+    <p class="eyebrow">404</p>
+    <h1 class="mt-4 text-4xl md:text-6xl font-light tracking-tight">{t('nf.title')}</h1>
+    <p class="mt-6 text-muted-foreground">{t('nf.body')}</p>
+    <a
+      href="/"
+      class="mt-10 inline-flex rounded-sm bg-foreground text-background px-7 py-4 text-sm tracking-wide hover:bg-primary transition-colors"
+    >
+      {t('nf.back')}
+    </a>
+  </div>
+</Base>

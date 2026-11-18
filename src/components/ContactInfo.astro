@@ -1,0 +1,78 @@
+---
+import Icon from './Icon.astro';
+import { site, whatsappMessage, whatsappUrl, type Lang } from '../data/site';
+import { useT } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  /** Muestra el enlace "Cómo llegar" bajo la dirección. */
+  directions?: boolean;
+}
+
+const { lang, directions = false } = Astro.props;
+const t = useT(lang);
+
+const box = 'h-11 w-11 shrink-0 grid place-items-center border border-border rounded-sm text-primary';
+---
+
+<div class="space-y-10 compact:space-y-5">
+  <div class="flex gap-5">
+    <span class={box}><Icon name="map-pin" size={18} strokeWidth={1.4} /></span>
+    <div>
+      <p class="eyebrow">{t('contact.address')}</p>
+      <address class="mt-2 text-lg not-italic">{site.address.display[lang]}</address>
+      {
+        directions && (
+          <a
+            href={site.google.directionsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group mt-3 compact:mt-0 compact:py-3 inline-flex items-center gap-1 text-xs uppercase tracking-[0.22em] text-muted-foreground hover:text-primary transition-colors"
+          >
+            {t('loc.directions')}
+            <Icon
+              name="arrow-up-right"
+              size={12}
+              class="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </a>
+        )
+      }
+    </div>
+  </div>
+  <div class="flex gap-5">
+    <span class={box}><Icon name="phone" size={18} strokeWidth={1.4} /></span>
+    <div>
+      <p class="eyebrow">{t('contact.phone')}</p>
+      <a href={`tel:${site.phone.e164}`} class="mt-2 compact:mt-0 compact:py-2 block text-lg hover:text-primary">{site.phone.display}</a>
+    </div>
+  </div>
+  <div class="flex gap-5">
+    <span class={box}><Icon name="mail" size={18} strokeWidth={1.4} /></span>
+    <div>
+      <p class="eyebrow">{t('contact.email')}</p>
+      <a href={`mailto:${site.email}`} class="mt-2 compact:mt-0 compact:py-2 block text-lg hover:text-primary break-all">{site.email}</a>
+    </div>
+  </div>
+  <div class="flex gap-5">
+    <span class={box}><Icon name="message-circle" size={18} strokeWidth={1.4} /></span>
+    <div>
+      <p class="eyebrow">{t('contact.whatsapp')}</p>
+      <a
+        href={whatsappUrl(whatsappMessage[lang])}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mt-2 compact:mt-0 compact:py-2 block text-lg hover:text-primary"
+      >
+        {t('contact.whatsappCta')}
+      </a>
+    </div>
+  </div>
+  <div class="flex gap-5">
+    <span class={box}><Icon name="clock" size={18} strokeWidth={1.4} /></span>
+    <div>
+      <p class="eyebrow">{t('contact.hours')}</p>
+      <p class="mt-2 text-sm text-muted-foreground">{site.hours.display[lang]}</p>
+    </div>
+  </div>
+</div>

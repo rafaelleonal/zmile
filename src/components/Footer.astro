@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/zmile-logo.png';
+import { site, whatsappMessage, whatsappUrl, type Lang } from '../data/site';
+import { routes, useT } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useT(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-32 compact:mt-0 border-t border-border bg-secondary/40">
+  <div class="container-luxe py-16 compact:py-11 grid gap-12 compact:gap-[30px] md:grid-cols-4">
+    <div class="md:col-span-2">
+      <Image src={logo} alt={site.name} width={260} class="h-16 compact:h-12 w-auto object-contain" />
+      <p class="mt-6 compact:mt-3.5 text-sm text-muted-foreground max-w-md leading-relaxed">{t('footer.tagline')}</p>
+    </div>
+    <div>
+      <p class="eyebrow mb-4 compact:mb-1.5">{t('footer.nav')}</p>
+      <ul class="space-y-3 compact:space-y-0 compact:grid compact:grid-cols-2 text-sm">
+        <li><a href={routes.home[lang]} class="compact:block compact:py-3 hover:text-primary">{t('nav.home')}</a></li>
+        <li><a href={routes.specialties[lang]} class="compact:block compact:py-3 hover:text-primary">{t('nav.specialties')}</a></li>
+        <li><a href={routes.appointment[lang]} class="compact:block compact:py-3 hover:text-primary">{t('cta.book')}</a></li>
+        <li><a href={routes.contact[lang]} class="compact:block compact:py-3 hover:text-primary">{t('nav.contact')}</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="eyebrow mb-4 compact:mb-1.5">{t('footer.contact')}</p>
+      <ul class="space-y-3 compact:space-y-0 text-sm text-muted-foreground">
+        <li>
+          <address class="not-italic compact:py-2">{site.address.display[lang]}</address>
+        </li>
+        <li><a href={`tel:${site.phone.e164}`} class="compact:block compact:py-3 hover:text-primary">{site.phone.display}</a></li>
+        <li><a href={`mailto:${site.email}`} class="compact:block compact:py-3 hover:text-primary">{site.email}</a></li>
+        <li>
+          <a href={whatsappUrl(whatsappMessage[lang])} target="_blank" rel="noopener noreferrer" class="compact:block compact:py-3 hover:text-primary">
+            WhatsApp
+          </a>
+        </li>
+        <li class="compact:py-2">{site.hours.display[lang]}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-border">
+    <div class="container-luxe py-6 text-xs text-muted-foreground flex flex-wrap items-center justify-between gap-2">
+      <span>© {year} {site.name}. {t('footer.rights')}</span>
+      <span>{t('footer.location')}</span>
+    </div>
+  </div>
+</footer>

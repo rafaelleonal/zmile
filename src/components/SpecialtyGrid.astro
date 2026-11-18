@@ -1,0 +1,118 @@
+---
+import Icon from './Icon.astro';
+import type { Lang } from '../data/site';
+import { specialties, specialtyPath, type Specialty } from '../data/specialties';
+import { routes, useT } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  /** Con modal (inicio, diseño original) o como enlaces directos a cada página. */
+  dialogs?: boolean;
+  /** Especialidad a omitir (p. ej. la que ya se está viendo). */
+  exclude?: string;
+  /** Nivel del encabezado de cada tarjeta. */
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { lang, dialogs = true, exclude, headingLevel: Heading = 'h3' } = Astro.props;
+const t = useT(lang);
+const list: Specialty[] = specialties.filter((s) => s.id !== exclude);
+---
+
+<div class="grid grid-cols-1 compact:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border">
+  {
+    list.map((s) => (
+      <a
+        href={specialtyPath(s, lang)}
+        data-spec-open={dialogs ? `spec-${s.id}` : undefined}
+        class="group bg-background p-8 md:p-10 flex items-start gap-5 text-left hover:bg-secondary/60 transition-colors compact:relative compact:flex-col compact:gap-3.5 compact:px-4 compact:pt-[18px] compact:pb-5 compact:last:odd:col-span-2 compact:last:odd:flex-row compact:last:odd:items-center"
+      >
+        <span class="h-12 w-12 compact:h-10 compact:w-10 shrink-0 rounded-sm border border-border grid place-items-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+          <Icon name={s.icon} size={20} strokeWidth={1.4} />
+        </span>
+        <div class="flex-1">
+          <Heading class="text-lg compact:text-[15px] compact:leading-[1.3] font-normal">{s[lang].name}</Heading>
+          <p class="mt-2 text-xs uppercase tracking-[0.22em] text-muted-foreground flex items-center gap-1 compact:absolute compact:top-[18px] compact:right-3.5 compact:mt-0">
+            <span class="compact:sr-only">{t('home.learnMore')}</span>
+            <Icon
+              name="arrow-up-right"
+              size={12}
+              class="compact:h-3.5 compact:w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </p>
+        </div>
+      </a>
+    ))
+  }
+</div>
+
+{
+  dialogs &&
+    list.map((s) => (
+      <dialog id={`spec-${s.id}`} class="spec-dialog border border-border bg-background text-foreground p-0 shadow-lg rounded-sm" aria-labelledby={`spec-${s.id}-title`}>
+        <div class="relative grid gap-4 p-6">
+          <div class="flex flex-col space-y-1.5 text-center sm:text-left">
+            <span class="h-12 w-12 rounded-sm border border-border grid place-items-center text-primary mb-4">
+              <Icon name={s.icon} size={20} strokeWidth={1.4} />
+            </span>
+            <p id={`spec-${s.id}-title`} class="text-2xl font-light tracking-tight leading-none">
+              {s[lang].name}
+            </p>
+            <p class="text-sm text-muted-foreground leading-relaxed pt-2">{s[lang].short}</p>
+          </div>
+          <div class="pt-6">
+            <a
+              href={`${routes.appointment[lang]}?s=${s.id}`}
+              class="group inline-flex w-full items-center justify-center gap-2 rounded-sm bg-foreground text-background px-7 py-4 text-sm tracking-wide hover:bg-primary transition-colors"
+            >
+              {t('cta.book')}
+              <Icon
+                name="arrow-up-right"
+                size={16}
+                class="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </a>
+            <a
+              href={specialtyPath(s, lang)}
+              class="group mt-5 flex items-center justify-center gap-1 text-xs uppercase tracking-[0.22em] text-muted-foreground hover:text-primary transition-colors"
+            >
+              {t('spec.viewPage')}
+              <Icon
+                name="arrow-up-right"
+                size={12}
+                class="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </a>
+          </div>
+          <form method="dialog" class="absolute right-4 top-4">
+            <button
+              type="submit"
+              aria-label={t('dialog.close')}
+              class="rounded-sm opacity-70 cursor-pointer transition-opacity hover:opacity-100"
+            >
+              <Icon name="x" size={16} />
+            </button>
+          </form>
+        </div>
+      </dialog>
+    ))
+}
+
+<script>
+  // Mejora progresiva: sin JavaScript (o para un buscador) cada tarjeta es un enlace
+  // a la página de la especialidad; con JavaScript abre el modal del diseño original.
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll<HTMLAnchorElement>('[data-spec-open]').forEach((card) => {
+      const dialog = document.getElementById(card.dataset.specOpen!) as HTMLDialogElement | null;
+      if (!dialog || typeof dialog.showModal !== 'function') return;
+      card.addEventListener('click', (e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        e.preventDefault();
+        dialog.showModal();
+      });
+      dialog.addEventListener('click', (e) => {
+        if (e.target === dialog) dialog.close();
+      });
+    });
+  });
+</script>

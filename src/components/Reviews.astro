@@ -1,0 +1,56 @@
+---
+import Icon from './Icon.astro';
+import { reviews } from '../data/content';
+import { site, type Lang } from '../data/site';
+import { useT } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useT(lang);
+---
+
+<section class="py-24 md:py-32 compact:py-16 bg-secondary/40">
+  <div class="container-luxe">
+    <div class="max-w-2xl mx-auto text-center mb-16 compact:mb-9">
+      <p class="eyebrow">{t('home.reviews.eyebrow')}</p>
+      <h2 class="mt-4 text-3xl md:text-5xl font-light tracking-tight">{t('home.reviews.title')}</h2>
+      <p class="mt-4 text-muted-foreground">{t('home.reviews.subtitle')}</p>
+    </div>
+    <div class="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4 compact:flex compact:gap-3 compact:overflow-x-auto compact:snap-x compact:snap-mandatory compact:bg-transparent compact:-mx-6 compact:px-6 compact:[scrollbar-width:none] compact:[&::-webkit-scrollbar]:hidden">
+      {
+        reviews.map((r) => (
+          <figure class="bg-background p-8 flex flex-col compact:shrink-0 compact:basis-[84%] compact:max-w-[340px] compact:snap-center compact:border compact:border-border compact:p-6">
+            <div class="flex gap-1 text-primary" role="img" aria-label={t('home.reviews.stars')}>
+              {[1, 2, 3, 4, 5].map(() => (
+                <Icon name="star" size={14} fill="currentColor" strokeWidth={0} />
+              ))}
+            </div>
+            <blockquote class="mt-5 text-sm text-muted-foreground leading-relaxed flex-1">“{r[lang]}”</blockquote>
+            <figcaption class="mt-6">
+              <p class="text-sm font-medium">{r.name}</p>
+              <p class="mt-1 text-xs uppercase tracking-[0.22em] text-muted-foreground">{t('review.detail')}</p>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+    <div class="mt-10 compact:mt-7 text-center">
+      <a
+        href={site.google.profileUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-muted-foreground hover:text-primary transition-colors"
+      >
+        {t('home.reviews.viewAll')}
+        <Icon
+          name="arrow-up-right"
+          size={14}
+          class="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+        />
+      </a>
+    </div>
+  </div>
+</section>

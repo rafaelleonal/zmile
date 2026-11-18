@@ -1,0 +1,121 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/zmile-logo.png';
+import Icon from './Icon.astro';
+import LangToggle from './LangToggle.astro';
+import { site, whatsappMessage, whatsappUrl, type Lang } from '../data/site';
+import { routes, useT, type RouteKey } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  alternates: { es: string; en: string };
+  active?: RouteKey;
+}
+
+const { lang, alternates, active } = Astro.props;
+const t = useT(lang);
+
+const links: { key: RouteKey; label: string }[] = [
+  { key: 'home', label: t('nav.home') },
+  { key: 'appointment', label: t('nav.appointment') },
+  { key: 'contact', label: t('nav.contact') },
+];
+---
+
+<header class="sticky top-0 z-40 backdrop-blur-md bg-background/80 border-b border-border">
+  <div class="container-luxe flex items-center justify-between h-20 compact:h-16">
+    <a href={routes.home[lang]} class="flex items-center gap-3 bg-white rounded-sm p-1">
+      <Image
+        src={logo}
+        alt={site.name}
+        width={220}
+        loading="eager"
+        class="h-12 md:h-14 compact:h-10 w-auto object-contain"
+      />
+    </a>
+
+    <nav class="hidden md:flex items-center gap-10" aria-label={t('footer.nav')}>
+      {
+        links.map((l) => (
+          <a
+            href={routes[l.key][lang]}
+            class:list={[
+              'text-sm tracking-wide hover:text-foreground transition-colors',
+              active === l.key ? 'text-foreground' : 'text-foreground/80',
+            ]}
+            aria-current={active === l.key ? 'page' : undefined}
+          >
+            {l.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="hidden md:flex items-center gap-4">
+      <LangToggle lang={lang} alternates={alternates} />
+      <a
+        href={whatsappUrl(whatsappMessage[lang])}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-sm text-muted-foreground hover:text-foreground transition-colors"
+      >
+        {site.phone.display}
+      </a>
+      <a
+        href={routes.appointment[lang]}
+        class="text-sm px-5 py-2.5 rounded-sm bg-foreground text-background hover:bg-primary transition-colors"
+      >
+        {t('cta.book')}
+      </a>
+    </div>
+
+    <div class="md:hidden flex items-center gap-3">
+      <LangToggle lang={lang} alternates={alternates} />
+      <button type="button" aria-label={t('menu.aria')} aria-expanded="false" aria-controls="mobile-menu" class="p-2 compact:p-3 compact:-mr-2" data-menu-toggle>
+        <Icon name="menu" size={20} class="menu-open-icon" />
+        <Icon name="x" size={20} class="menu-close-icon hidden" />
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="md:hidden border-t border-border bg-background animate-fade-in" hidden>
+    <nav class="container-luxe py-6 flex flex-col gap-4" aria-label={t('menu.aria')}>
+      {links.map((l) => <a href={routes[l.key][lang]} class="text-base text-foreground/80">{l.label}</a>)}
+      <a
+        href={routes.appointment[lang]}
+        class="mt-2 text-center text-sm px-5 py-3 rounded-sm bg-foreground text-background"
+      >
+        {t('cta.book')}
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Con navegación sin recarga los scripts corren una sola vez: el menú se reconecta
+  // en cada página con el evento `astro:page-load`.
+  const parts = () => ({
+    toggle: document.querySelector<HTMLButtonElement>('[data-menu-toggle]'),
+    menu: document.getElementById('mobile-menu'),
+  });
+  const setOpen = (open: boolean) => {
+    const { toggle, menu } = parts();
+    if (!toggle || !menu) return;
+    menu.toggleAttribute('hidden', !open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.querySelector('.menu-open-icon')?.classList.toggle('hidden', open);
+    toggle.querySelector('.menu-close-icon')?.classList.toggle('hidden', !open);
+  };
+  const isOpen = () => parts().menu?.hasAttribute('hidden') === false;
+
+  document.addEventListener('astro:page-load', () => {
+    const { toggle, menu } = parts();
+    toggle?.addEventListener('click', () => setOpen(!isOpen()));
+    menu?.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) setOpen(false);
+    });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isOpen()) setOpen(false);
+  });
+</script>
