@@ -75,6 +75,9 @@ export function clinicSchema(base: URL | string, lang: Lang) {
         },
       })),
     },
+    ...(site.booking.dentalinkUrl
+      ? { potentialAction: { '@type': 'ReserveAction', target: site.booking.dentalinkUrl } }
+      : {}),
     sameAs: [site.google.profileUrl, ...site.social.map((s) => s.url)],
   };
 }

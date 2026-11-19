@@ -96,6 +96,10 @@ const es = {
   'appt.intro':
     'Completa el formulario y envíalo por WhatsApp: nuestro equipo te responderá por ese medio para confirmar tu cita.',
   'appt.optional': 'opcional',
+  'appt.online.eyebrow': 'Agenda en línea',
+  'appt.online.body': 'Elige el día y la hora entre los horarios disponibles y reserva al momento.',
+  'appt.online.cta': 'Ver horarios disponibles',
+  'appt.online.or': 'O solicita tu cita por WhatsApp con el formulario.',
   'appt.submitNote': 'Al enviar se abrirá WhatsApp con tu solicitud lista. Solo presiona enviar.',
   'appt.privacy': 'Al enviar aceptas el tratamiento de tus datos conforme a nuestro',
   'footer.privacy': 'Aviso de privacidad',
@@ -208,6 +212,10 @@ const en: Record<UiKey, string> = {
   'appt.intro':
     'Fill out the form and send it via WhatsApp: our team will reply there to confirm your appointment.',
   'appt.optional': 'optional',
+  'appt.online.eyebrow': 'Online booking',
+  'appt.online.body': 'Pick a day and time from the available slots and book instantly.',
+  'appt.online.cta': 'See available times',
+  'appt.online.or': 'Or request your appointment via WhatsApp with the form.',
   'appt.submitNote': 'Submitting opens WhatsApp with your request ready. Just press send.',
   'appt.privacy': 'By submitting you agree to the processing of your data under our',
   'footer.privacy': 'Privacy notice',

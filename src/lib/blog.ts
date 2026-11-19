@@ -17,3 +17,7 @@ export async function getPosts(): Promise<Post[]> {
 
 export const formatDate = (date: Date) =>
   date.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+
+/** Minutos de lectura estimados (unas 200 palabras por minuto). */
+export const readingMinutes = (post: Post) =>
+  Math.max(1, Math.round((post.body ?? '').split(/\s+/).filter(Boolean).length / 200));

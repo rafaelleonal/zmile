@@ -2,7 +2,9 @@
 title: ¿Por qué hacerte una limpieza dental cada seis meses?
 description: Qué hace una limpieza dental profesional, por qué se recomienda cada seis meses y qué señales indican que no conviene esperar.
 pubDate: 2026-11-19
-author: Zmile Dental Clinic
+author: Dra. Laura Rojas
+cover: /media/limpieza-dental.jpg
+coverAlt: La Dra. Laura Rojas muestra la técnica de cepillado en un modelo dental
 draft: true
 ---
 

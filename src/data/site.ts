@@ -69,6 +69,14 @@ export const site = {
 
   stats: { specialists: '+10', specialties: '9' },
 
+  // Agenda en línea de Dentalink. Pegar aquí la liga que Dentalink muestra en
+  // Administración → Agenda Online (botón negro "copiar"). Mientras esté vacía, la página
+  // de agenda solo ofrece el formulario a WhatsApp; al llenarla aparece el botón
+  // "Ver horarios disponibles" y se declara la reserva en línea en los datos para Google.
+  booking: {
+    dentalinkUrl: 'https://ff.healthatom.io/JsRKwL' as string,
+  },
+
   // Datos confirmados por la clínica (noviembre de 2026).
   languages: {
     es: 'español e inglés',

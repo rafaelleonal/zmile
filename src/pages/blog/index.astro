@@ -1,13 +1,15 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Icon from '../../components/Icon.astro';
 import CtaSection from '../../components/CtaSection.astro';
+import PostCard from '../../components/PostCard.astro';
 import { routes } from '../../i18n/ui';
-import { blogPath, formatDate, getPosts, postPath } from '../../lib/blog';
+import { blogPath, getPosts } from '../../lib/blog';
 import { breadcrumbSchema } from '../../lib/seo';
 
 // Índice del blog. Los artículos solo existen en español.
+// El más reciente va destacado a lo ancho; los demás, en cuadrícula.
 const posts = await getPosts();
+const [featured, ...rest] = posts;
 ---
 
 <Base
@@ -39,42 +41,24 @@ const posts = await getPosts();
     </div>
 
     {
-      posts.length === 0 ? (
+      !featured ? (
         <p class="border-t border-border pt-10 text-muted-foreground">
           Pronto publicaremos nuestros primeros artículos.
         </p>
       ) : (
-        <div class="grid gap-8 compact:gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post) => (
-            <a href={postPath(post)} class="group border border-border bg-background flex flex-col hover:bg-secondary/60 transition-colors">
-              {post.data.cover && (
-                <img
-                  src={post.data.cover}
-                  alt={post.data.coverAlt ?? ''}
-                  loading="lazy"
-                  decoding="async"
-                  class="aspect-[3/2] w-full object-cover"
-                />
-              )}
-              <div class="flex flex-1 flex-col p-8 compact:p-6">
-                <p class="eyebrow">
-                  <time datetime={post.data.pubDate.toISOString().slice(0, 10)}>{formatDate(post.data.pubDate)}</time>
-                  {post.data.draft && <span class="text-primary"> · Borrador</span>}
-                </p>
-                <h2 class="mt-4 text-xl font-normal leading-snug">{post.data.title}</h2>
-                <p class="mt-3 flex-1 text-sm text-muted-foreground leading-relaxed">{post.data.description}</p>
-                <p class="mt-6 text-xs uppercase tracking-[0.22em] text-muted-foreground flex items-center gap-1">
-                  Leer artículo
-                  <Icon
-                    name="arrow-up-right"
-                    size={12}
-                    class="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                  />
-                </p>
+        <>
+          <PostCard post={featured} featured />
+          {rest.length > 0 && (
+            <>
+              <div class="hairline my-16 md:my-20 compact:my-12" />
+              <div class="grid gap-x-10 gap-y-14 compact:gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+                {rest.map((post) => (
+                  <PostCard post={post} headingLevel="h2" />
+                ))}
               </div>
-            </a>
-          ))}
-        </div>
+            </>
+          )}
+        </>
       )
     }
   </div>

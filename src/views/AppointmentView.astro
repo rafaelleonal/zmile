@@ -74,6 +74,28 @@ const wa = {
         <p class="text-foreground">{t('appt.hours')}: {site.hours.display[lang]}</p>
         <address class="text-foreground not-italic">{site.address.display[lang]}</address>
       </div>
+      {
+        site.booking.dentalinkUrl && (
+          <div class="mt-10 compact:mt-8 border border-border bg-secondary/40 p-6">
+            <p class="eyebrow">{t('appt.online.eyebrow')}</p>
+            <p class="mt-3 text-sm text-muted-foreground leading-relaxed">{t('appt.online.body')}</p>
+            <a
+              href={site.booking.dentalinkUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group mt-5 inline-flex w-full items-center justify-center gap-2 rounded-sm bg-foreground text-background px-7 py-4 text-sm tracking-wide hover:bg-primary transition-colors"
+            >
+              {t('appt.online.cta')}
+              <Icon
+                name="arrow-up-right"
+                size={16}
+                class="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </a>
+            <p class="mt-4 text-xs text-muted-foreground leading-relaxed">{t('appt.online.or')}</p>
+          </div>
+        )
+      }
     </div>
 
     <form

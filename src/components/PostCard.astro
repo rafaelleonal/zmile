@@ -1,0 +1,68 @@
+---
+import logoUrl from '../assets/zmile-logo.svg?url';
+import Icon from './Icon.astro';
+import { formatDate, postPath, readingMinutes, type Post } from '../lib/blog';
+
+// Tarjeta de artículo del blog. `featured` la muestra a lo ancho, con la foto a la izquierda.
+interface Props {
+  post: Post;
+  featured?: boolean;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { post, featured = false, headingLevel: Heading = 'h2' } = Astro.props;
+const { title, description, pubDate, author, cover, coverAlt, draft } = post.data;
+---
+
+<a
+  href={postPath(post)}
+  class:list={['group', featured ? 'grid lg:grid-cols-12 gap-8 compact:gap-6 lg:gap-14 items-center' : 'flex flex-col']}
+>
+  <div class:list={['overflow-hidden rounded-sm bg-secondary', featured && 'lg:col-span-7 shadow-luxe']}>
+    {
+      cover ? (
+        <img
+          src={cover}
+          alt={coverAlt ?? ''}
+          loading={featured ? 'eager' : 'lazy'}
+          decoding="async"
+          class="aspect-[3/2] w-full object-cover object-[center_30%] transition-transform duration-700 group-hover:scale-[1.03]"
+        />
+      ) : (
+        <div class="aspect-[3/2] grid place-items-center">
+          <img src={logoUrl} alt="" width="3168" height="1704" loading="lazy" class="h-10 w-auto opacity-70" />
+        </div>
+      )
+    }
+  </div>
+
+  <div class:list={[featured ? 'lg:col-span-5' : 'mt-6 flex flex-1 flex-col']}>
+    <p class="eyebrow">
+      <time datetime={pubDate.toISOString().slice(0, 10)}>{formatDate(pubDate)}</time>
+      <span> · {readingMinutes(post)} min de lectura</span>
+      {draft && <span class="text-primary"> · Borrador</span>}
+    </p>
+    <Heading
+      class:list={[
+        'font-light tracking-tight group-hover:text-primary transition-colors',
+        featured ? 'mt-5 text-3xl md:text-4xl leading-[1.12]' : 'mt-4 text-2xl leading-snug',
+      ]}
+    >
+      {title}
+    </Heading>
+    <p class:list={['text-muted-foreground leading-relaxed', featured ? 'mt-5 text-lg compact:text-[17px]' : 'mt-3 flex-1 text-sm']}>
+      {description}
+    </p>
+    <p class:list={['flex items-center justify-between gap-4 border-t border-border pt-5', featured ? 'mt-8' : 'mt-6']}>
+      <span class="text-sm">{author}</span>
+      <span class="text-xs uppercase tracking-[0.22em] text-muted-foreground flex items-center gap-1">
+        Leer artículo
+        <Icon
+          name="arrow-up-right"
+          size={12}
+          class="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+        />
+      </span>
+    </p>
+  </div>
+</a>

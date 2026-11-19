@@ -219,12 +219,22 @@ html[data-lang-switch]::view-transition-new(root) {
 .prose-zmile > * + * {
   margin-top: 1.25em;
 }
-.prose-zmile h2 {
-  margin-top: 2.2em;
+.prose-zmile > p:first-child {
   color: var(--foreground);
-  font-size: 1.625rem;
+  font-size: 1.25rem;
+  line-height: 1.6;
+}
+.prose-zmile h2 {
+  margin-top: 2.4em;
+  border-top: 1px solid var(--border);
+  padding-top: 1.3em;
+  color: var(--foreground);
+  font-size: 1.75rem;
   font-weight: 300;
-  line-height: 1.25;
+  line-height: 1.2;
+}
+.prose-zmile li::marker {
+  color: var(--primary);
 }
 .prose-zmile h3 {
   margin-top: 1.8em;
