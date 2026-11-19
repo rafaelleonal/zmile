@@ -1,0 +1,58 @@
+# Configuración de Pages CMS (https://pagescms.org): el panel donde la clínica escribe
+# los artículos del blog sin tocar código. Cada cambio se guarda como un commit en este
+# repositorio y el sitio se vuelve a publicar.
+media:
+  input: public/media
+  output: /media
+  rename: safe
+  categories: [image]
+
+content:
+  - name: blog
+    label: Blog
+    type: collection
+    path: src/content/blog
+    filename: '{primary}.md'
+    view:
+      fields: [title, pubDate, draft]
+      primary: title
+      sort: [pubDate, title]
+      default:
+        sort: pubDate
+        order: desc
+    fields:
+      - name: title
+        label: Título
+        type: string
+        required: true
+      - name: description
+        label: Resumen
+        description: Una o dos frases. Es el texto que aparece en Google y en la lista del blog.
+        type: text
+        required: true
+        options:
+          maxlength: 170
+      - name: pubDate
+        label: Fecha de publicación
+        type: date
+        required: true
+      - name: author
+        label: Autor
+        type: string
+        default: Dra. Laura Rojas
+      - name: cover
+        label: Imagen de portada
+        description: Opcional. De preferencia horizontal y de menos de 500 KB.
+        type: image
+      - name: coverAlt
+        label: Descripción de la imagen
+        description: Qué se ve en la foto, para personas que usan lector de pantalla y para Google.
+        type: string
+      - name: draft
+        label: Borrador
+        description: Mientras esté activado, el artículo no se publica.
+        type: boolean
+        default: true
+      - name: body
+        label: Texto del artículo
+        type: rich-text

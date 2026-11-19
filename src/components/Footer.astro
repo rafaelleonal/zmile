@@ -1,6 +1,6 @@
 ---
-import { Image } from 'astro:assets';
-import logo from '../assets/zmile-logo.png';
+import logoUrl from '../assets/zmile-logo.svg?url';
+import { getPosts } from '../lib/blog';
 import { site, whatsappMessage, whatsappUrl, type Lang } from '../data/site';
 import { privacyPath, routes, useT } from '../i18n/ui';
 
@@ -11,12 +11,13 @@ interface Props {
 const { lang } = Astro.props;
 const t = useT(lang);
 const year = new Date().getFullYear();
+const showBlog = lang === 'es' && site.design.blogInNav && (await getPosts()).length > 0;
 ---
 
 <footer class="mt-32 compact:mt-0 border-t border-border bg-secondary/40">
   <div class="container-luxe py-16 compact:py-11 grid gap-12 compact:gap-[30px] md:grid-cols-4">
     <div class="md:col-span-2">
-      <Image src={logo} alt={site.name} width={260} class="h-16 compact:h-12 w-auto object-contain" />
+      <img src={logoUrl} alt={site.name} width="3168" height="1704" loading="lazy" class="h-[47px] compact:h-9 w-auto" />
       <p class="mt-6 compact:mt-3.5 text-sm text-muted-foreground max-w-md leading-relaxed">{t('footer.tagline')}</p>
     </div>
     <div>
@@ -24,6 +25,7 @@ const year = new Date().getFullYear();
       <ul class="space-y-3 compact:space-y-0 compact:grid compact:grid-cols-2 text-sm">
         <li><a href={routes.home[lang]} class="compact:block compact:py-3 hover:text-primary">{t('nav.home')}</a></li>
         <li><a href={routes.specialties[lang]} class="compact:block compact:py-3 hover:text-primary">{t('nav.specialties')}</a></li>
+        {showBlog && <li><a href={routes.blog.es} class="compact:block compact:py-3 hover:text-primary">{t('nav.blog')}</a></li>}
         <li><a href={routes.appointment[lang]} class="compact:block compact:py-3 hover:text-primary">{t('cta.book')}</a></li>
         <li><a href={routes.contact[lang]} class="compact:block compact:py-3 hover:text-primary">{t('nav.contact')}</a></li>
       </ul>

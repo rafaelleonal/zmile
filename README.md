@@ -25,6 +25,7 @@ Sitio 100 % estático: sin base de datos ni servidor.
 - **Textos de interfaz ES/EN y rutas**: `src/i18n/ui.ts`.
 - **Colores y tipografía**: `src/styles/global.css`.
 - **Dominio final**: `zmileclinic.com`, definido como `SITE` en `astro.config.mjs` (o variable de entorno `SITE_URL` al hacer build).
+- **Logo del encabezado y el pie**: `src/assets/zmile-logo.svg` (vectorizado, fondo transparente).
 - **Favicon, logo e imagen para compartir**: `node scripts/generate-brand-assets.mjs`.
 
 ## Rutas
@@ -39,6 +40,30 @@ Sitio 100 % estático: sin base de datos ni servidor.
 
 Además: `/robots.txt`, `/sitemap-index.xml`, `/llms.txt`, `/llms-full.txt`.
 Las rutas del sitio anterior (`/appointment`, `/contact`) redirigen a las nuevas.
+
+## Blog y editor sin código (Pages CMS)
+
+Los artículos son archivos Markdown en `src/content/blog/`. La clínica los escribe desde
+[Pages CMS](https://pagescms.org), un editor de código abierto y gratuito que guarda cada
+cambio como commit en este repositorio; su configuración está en `.pages.yml`.
+
+Puesta en marcha (una sola vez):
+
+1. Entrar a https://app.pagescms.org con la cuenta de GitHub dueña del repositorio.
+2. Instalar la GitHub App de Pages CMS sobre este repositorio.
+3. Invitar por correo a quien vaya a escribir (no necesita cuenta de GitHub).
+
+Para escribir: Blog → nuevo artículo → título, resumen, fecha y texto. Mientras «Borrador»
+esté activado el artículo no se publica; al desactivarlo aparece en `/blog/` y el enlace
+«Blog» entra solo al menú. Las imágenes se suben a `public/media/`.
+
+El sitio se vuelve a publicar con cada commit solo si el hospedaje está conectado al
+repositorio de GitHub (Cloudflare Pages o la integración de Git de Vercel).
+
+## Sección «Quiénes somos»
+
+Los datos y textos de la directora están en `src/data/team.ts`; su foto, en
+`src/assets/dra-laura-rojas.jpg`.
 
 ## Formulario de citas
 

@@ -1,10 +1,10 @@
 ---
-import { Image } from 'astro:assets';
-import logo from '../assets/zmile-logo.png';
+import logoUrl from '../assets/zmile-logo.svg?url';
 import Icon from './Icon.astro';
 import LangToggle from './LangToggle.astro';
 import { site, whatsappMessage, whatsappUrl, type Lang } from '../data/site';
 import { routes, useT, type RouteKey } from '../i18n/ui';
+import { getPosts } from '../lib/blog';
 
 interface Props {
   lang: Lang;
@@ -20,18 +20,16 @@ const links: { key: RouteKey; label: string }[] = [
   { key: 'appointment', label: t('nav.appointment') },
   { key: 'contact', label: t('nav.contact') },
 ];
+// El blog (solo en español) entra al menú cuando ya hay artículos publicados.
+if (lang === 'es' && site.design.blogInNav && (await getPosts()).length > 0) {
+  links.splice(1, 0, { key: 'blog', label: t('nav.blog') });
+}
 ---
 
 <header class="sticky top-0 z-40 backdrop-blur-md bg-background/80 border-b border-border">
   <div class="container-luxe flex items-center justify-between h-20 compact:h-16">
-    <a href={routes.home[lang]} class="flex items-center gap-3 bg-white rounded-sm p-1">
-      <Image
-        src={logo}
-        alt={site.name}
-        width={220}
-        loading="eager"
-        class="h-12 md:h-14 compact:h-10 w-auto object-contain"
-      />
+    <a href={routes.home[lang]} class="flex items-center">
+      <img src={logoUrl} alt={site.name} width="3168" height="1704" class="h-9 md:h-[41px] compact:h-[30px] w-auto" />
     </a>
 
     <nav class="hidden md:flex items-center gap-10" aria-label={t('footer.nav')}>

@@ -1,0 +1,83 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import CtaSection from '../../components/CtaSection.astro';
+import { routes } from '../../i18n/ui';
+import { blogPath, formatDate, getPosts, postPath } from '../../lib/blog';
+import { breadcrumbSchema } from '../../lib/seo';
+
+// Índice del blog. Los artículos solo existen en español.
+const posts = await getPosts();
+---
+
+<Base
+  lang="es"
+  title="Blog de salud dental | Zmile Dental Clinic"
+  description="Consejos de salud dental de Zmile Dental Clinic, clínica de especialidades en Roma Sur, CDMX: prevención, tratamientos y cuidado diario de tu sonrisa."
+  alternates={{ es: blogPath, en: routes.home.en }}
+  translated={false}
+  active="blog"
+  noindex={posts.length === 0}
+  schema={[
+    breadcrumbSchema(Astro.site!, [
+      { name: 'Inicio', path: routes.home.es },
+      { name: 'Blog', path: blogPath },
+    ]),
+  ]}
+>
+  <div class="container-luxe pt-20 md:pt-28 pb-24 md:pb-32 compact:pt-11 compact:pb-16">
+    <div class="grid md:grid-cols-12 gap-10 compact:gap-3.5 items-end mb-16 compact:mb-9">
+      <div class="md:col-span-7">
+        <p class="eyebrow">Blog</p>
+        <h1 class="mt-4 text-4xl md:text-6xl font-light tracking-tight">Consejos para cuidar tu sonrisa.</h1>
+      </div>
+      <div class="md:col-span-5">
+        <p class="text-muted-foreground leading-relaxed">
+          Respuestas claras a las dudas más comunes sobre salud dental, escritas por el equipo de la clínica.
+        </p>
+      </div>
+    </div>
+
+    {
+      posts.length === 0 ? (
+        <p class="border-t border-border pt-10 text-muted-foreground">
+          Pronto publicaremos nuestros primeros artículos.
+        </p>
+      ) : (
+        <div class="grid gap-8 compact:gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <a href={postPath(post)} class="group border border-border bg-background flex flex-col hover:bg-secondary/60 transition-colors">
+              {post.data.cover && (
+                <img
+                  src={post.data.cover}
+                  alt={post.data.coverAlt ?? ''}
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-[3/2] w-full object-cover"
+                />
+              )}
+              <div class="flex flex-1 flex-col p-8 compact:p-6">
+                <p class="eyebrow">
+                  <time datetime={post.data.pubDate.toISOString().slice(0, 10)}>{formatDate(post.data.pubDate)}</time>
+                  {post.data.draft && <span class="text-primary"> · Borrador</span>}
+                </p>
+                <h2 class="mt-4 text-xl font-normal leading-snug">{post.data.title}</h2>
+                <p class="mt-3 flex-1 text-sm text-muted-foreground leading-relaxed">{post.data.description}</p>
+                <p class="mt-6 text-xs uppercase tracking-[0.22em] text-muted-foreground flex items-center gap-1">
+                  Leer artículo
+                  <Icon
+                    name="arrow-up-right"
+                    size={12}
+                    class="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </p>
+              </div>
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </div>
+
+  <CtaSection lang="es" />
+</Base>

@@ -1,6 +1,8 @@
 import { homeFaqs } from '../data/content';
 import { site } from '../data/site';
 import { specialties, specialtyPath } from '../data/specialties';
+import { director } from '../data/team';
+import { formatDate, postPath, type Post } from './blog';
 import { privacyPath, routes } from '../i18n/ui';
 
 // Genera /llms.txt y /llms-full.txt (formato https://llmstxt.org): un resumen en
@@ -23,13 +25,17 @@ function facts(base: URL): string[] {
     `- Urgencias dentales: se atienden el mismo día`,
     `- Formas de pago: ${site.payment.es}; por ahora no trabaja con seguros dentales`,
     `- Citas: ${u(base, routes.appointment.es)} (el formulario se envía por WhatsApp) o directo por WhatsApp/teléfono`,
+    `- Directora: ${director.name}, cirujana dentista con formación en Odontología Estética y Restauradora por la UNAM; consulta privada desde ${director.practiceSince}; cédula profesional ${director.license}; perfil en Doctoralia: ${director.doctoraliaUrl}`,
     `- Google Maps y reseñas: ${site.google.profileUrl}`,
     ...site.social.map((s) => `- ${s.label}: ${s.url}`),
     `- Idiomas del sitio: español (${u(base, '/')}) e inglés (${u(base, '/en/')})`,
   ];
 }
 
-export function llmsTxt(base: URL): string {
+export function llmsTxt(base: URL, posts: Post[] = []): string {
+  const blog = posts.length
+    ? ['## Blog', '', ...posts.map((p) => `- [${p.data.title}](${u(base, postPath(p))}) (${formatDate(p.data.pubDate)}): ${p.data.description}`), '']
+    : [];
   return [
     `# ${site.name}`,
     '',
@@ -51,6 +57,7 @@ export function llmsTxt(base: URL): string {
     `- [Aviso de privacidad](${u(base, privacyPath)}): tratamiento de datos personales y derechos ARCO`,
     `- [Especialidades](${u(base, routes.specialties.es)}): listado de las nueve especialidades`,
     '',
+    ...blog,
     '## English',
     '',
     `- [Home](${u(base, routes.home.en)}): specialty dental clinic in Roma Sur, Mexico City; open ${site.hours.long.en}`,

@@ -7,7 +7,7 @@ import WhatsAppFab from '../components/WhatsAppFab.astro';
 import MobileCtaBar from '../components/MobileCtaBar.astro';
 import { site, type Lang } from '../data/site';
 import { htmlLang, ogLocale, type RouteKey } from '../i18n/ui';
-import { clinicSchema, websiteSchema, webPageSchema } from '../lib/seo';
+import { clinicSchema, directorSchema, websiteSchema, webPageSchema } from '../lib/seo';
 
 interface Props {
   lang: Lang;
@@ -40,6 +40,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     clinicSchema(base, lang),
+    directorSchema(base, lang),
     websiteSchema(base),
     webPageSchema(base, { url: canonical, title, description, lang }),
     ...schema,

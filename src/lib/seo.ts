@@ -1,6 +1,8 @@
 import { site, type Lang } from '../data/site';
 import { specialties, specialtyPath, type Faq, type Specialty } from '../data/specialties';
+import { director } from '../data/team';
 import { routes } from '../i18n/ui';
+import type { Post } from './blog';
 
 // Datos estructurados (schema.org / JSON-LD). Son la forma más directa de decirle a
 // Google, Bing y a los asistentes de IA qué es la clínica, dónde está y qué ofrece.
@@ -9,6 +11,7 @@ const abs = (base: URL | string, path: string) => new URL(path, base).href;
 
 export const clinicId = (base: URL | string) => abs(base, '/#clinic');
 export const websiteId = (base: URL | string) => abs(base, '/#website');
+export const directorId = (base: URL | string) => abs(base, `/#${director.id}`);
 
 export function clinicSchema(base: URL | string, lang: Lang) {
   return {
@@ -47,6 +50,7 @@ export function clinicSchema(base: URL | string, lang: Lang) {
       },
     ],
     areaServed: site.areaServed.map((name) => ({ '@type': 'Place', name: `${name}, ${site.address.city}` })),
+    employee: { '@id': directorId(base) },
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: lang === 'en' ? 'appointments' : 'citas',
@@ -72,6 +76,43 @@ export function clinicSchema(base: URL | string, lang: Lang) {
       })),
     },
     sameAs: [site.google.profileUrl, ...site.social.map((s) => s.url)],
+  };
+}
+
+export function directorSchema(base: URL | string, lang: Lang) {
+  return {
+    '@type': 'Person',
+    '@id': directorId(base),
+    name: director.name,
+    jobTitle: director[lang].jobTitle,
+    worksFor: { '@id': clinicId(base) },
+    alumniOf: { '@type': 'CollegeOrUniversity', name: director.university },
+    knowsLanguage: ['es', 'en'],
+    identifier: {
+      '@type': 'PropertyValue',
+      name: lang === 'en' ? 'Mexican professional license (cédula profesional)' : 'Cédula profesional',
+      value: director.license,
+    },
+    sameAs: [director.doctoraliaUrl],
+  };
+}
+
+export function articleSchema(base: URL | string, post: Post) {
+  const url = abs(base, `/blog/${post.id}/`);
+  return {
+    '@type': 'BlogPosting',
+    '@id': `${url}#article`,
+    headline: post.data.title,
+    description: post.data.description,
+    datePublished: post.data.pubDate.toISOString(),
+    inLanguage: 'es-MX',
+    mainEntityOfPage: url,
+    image: post.data.cover ? [abs(base, post.data.cover)] : [abs(base, '/og.jpg')],
+    author:
+      post.data.author === director.name
+        ? { '@id': directorId(base) }
+        : { '@type': 'Organization', name: post.data.author },
+    publisher: { '@id': clinicId(base) },
   };
 }
 

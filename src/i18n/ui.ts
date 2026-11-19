@@ -5,6 +5,8 @@ export const routes = {
   home: { es: '/', en: '/en/' },
   appointment: { es: '/agenda/', en: '/en/appointment/' },
   contact: { es: '/contacto/', en: '/en/contact/' },
+  // El blog solo existe en español.
+  blog: { es: '/blog/', en: '/blog/' },
   specialties: { es: '/especialidades/', en: '/en/specialties/' },
 } as const;
 
@@ -19,6 +21,7 @@ const es = {
   'nav.specialties': 'Especialidades',
   'nav.appointment': 'Agenda',
   'nav.contact': 'Contacto',
+  'nav.blog': 'Blog',
   'cta.book': 'Agenda tu cita',
   'cta.bookShort': 'Reservar cita',
   'cta.whatsapp': 'WhatsApp',
@@ -130,6 +133,7 @@ const en: Record<UiKey, string> = {
   'nav.specialties': 'Specialties',
   'nav.appointment': 'Booking',
   'nav.contact': 'Contact',
+  'nav.blog': 'Blog',
   'cta.book': 'Book your appointment',
   'cta.bookShort': 'Book appointment',
   'cta.whatsapp': 'WhatsApp',

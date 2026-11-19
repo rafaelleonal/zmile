@@ -94,6 +94,8 @@ export const site = {
     mobileCompact: true,
     // Enlaces a redes sociales en el pie de página.
     footerSocial: true,
+    // Enlace "Blog" en el menú y el pie (solo aparece cuando hay artículos publicados).
+    blogInNav: true,
   },
 
   // Perfiles oficiales de la clínica: se publican en el pie, en el JSON-LD (sameAs)

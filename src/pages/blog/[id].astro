@@ -1,0 +1,77 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CtaSection from '../../components/CtaSection.astro';
+import { routes } from '../../i18n/ui';
+import { blogPath, formatDate, getPosts, postPath, type Post } from '../../lib/blog';
+import { articleSchema, breadcrumbSchema } from '../../lib/seo';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const { title, description, pubDate, author, cover, coverAlt, draft } = post.data;
+
+const crumbs = [
+  { name: 'Inicio', path: routes.home.es },
+  { name: 'Blog', path: blogPath },
+  { name: title, path: postPath(post) },
+];
+---
+
+<Base
+  lang="es"
+  title={`${title} | Zmile Dental Clinic`}
+  description={description}
+  alternates={{ es: postPath(post), en: routes.home.en }}
+  translated={false}
+  active="blog"
+  noindex={draft}
+  schema={[articleSchema(Astro.site!, post), breadcrumbSchema(Astro.site!, crumbs)]}
+>
+  <article class="container-luxe pt-12 md:pt-16 pb-20 md:pb-28 compact:pt-7 compact:pb-14">
+    <nav aria-label="Breadcrumb">
+      <ol class="eyebrow flex flex-wrap items-center gap-x-3 gap-y-1">
+        <li class="compact:hidden"><a href={routes.home.es} class="hover:text-primary transition-colors">Inicio</a></li>
+        <li class="flex items-center gap-3">
+          <span aria-hidden="true" class="compact:hidden">/</span>
+          <a href={blogPath} class="hover:text-primary transition-colors">Blog</a>
+        </li>
+      </ol>
+    </nav>
+
+    <header class="mt-12 md:mt-16 compact:mt-7 max-w-3xl">
+      <p class="eyebrow">
+        <time datetime={pubDate.toISOString().slice(0, 10)}>{formatDate(pubDate)}</time>
+        <span> · {author}</span>
+        {draft && <span class="text-primary"> · Borrador</span>}
+      </p>
+      <h1 class="mt-5 text-4xl md:text-5xl font-light leading-[1.1] tracking-tight">{title}</h1>
+      <p class="mt-6 text-lg compact:text-[17px] text-muted-foreground leading-relaxed">{description}</p>
+    </header>
+
+    {
+      cover && (
+        <img
+          src={cover}
+          alt={coverAlt ?? ''}
+          decoding="async"
+          class="mt-10 aspect-[3/2] w-full max-w-3xl rounded-sm object-cover"
+        />
+      )
+    }
+
+    <div class="prose-zmile mt-12 compact:mt-9 max-w-3xl">
+      <Content />
+    </div>
+  </article>
+
+  <CtaSection lang="es" />
+</Base>
