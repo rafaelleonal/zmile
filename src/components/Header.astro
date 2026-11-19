@@ -3,7 +3,7 @@ import logoUrl from '../assets/zmile-logo.svg?url';
 import Icon from './Icon.astro';
 import LangToggle from './LangToggle.astro';
 import { site, whatsappMessage, whatsappUrl, type Lang } from '../data/site';
-import { routes, useT, type RouteKey } from '../i18n/ui';
+import { aboutPath, routes, useT, type RouteKey } from '../i18n/ui';
 import { getPosts } from '../lib/blog';
 
 interface Props {
@@ -15,14 +15,16 @@ interface Props {
 const { lang, alternates, active } = Astro.props;
 const t = useT(lang);
 
-const links: { key: RouteKey; label: string }[] = [
-  { key: 'home', label: t('nav.home') },
-  { key: 'appointment', label: t('nav.appointment') },
-  { key: 'contact', label: t('nav.contact') },
+// `only` limita un enlace a pantallas grandes para que el menú quepa en tabletas.
+const links: { key: RouteKey | 'about'; label: string; href: string; only?: 'lg' }[] = [
+  { key: 'home', label: t('nav.home'), href: routes.home[lang], only: 'lg' },
+  { key: 'about', label: t('nav.about'), href: aboutPath[lang] },
+  { key: 'appointment', label: t('nav.appointment'), href: routes.appointment[lang] },
+  { key: 'contact', label: t('nav.contact'), href: routes.contact[lang] },
 ];
-// El blog (solo en español) entra al menú cuando ya hay artículos publicados.
+// El blog (solo en español) entra al menú cuando ya hay artículos visibles.
 if (lang === 'es' && site.design.blogInNav && (await getPosts()).length > 0) {
-  links.splice(1, 0, { key: 'blog', label: t('nav.blog') });
+  links.splice(2, 0, { key: 'blog', label: t('nav.blog'), href: routes.blog.es });
 }
 ---
 
@@ -32,14 +34,15 @@ if (lang === 'es' && site.design.blogInNav && (await getPosts()).length > 0) {
       <img src={logoUrl} alt={site.name} width="3168" height="1704" class="h-9 md:h-[41px] compact:h-[30px] w-auto" />
     </a>
 
-    <nav class="hidden md:flex items-center gap-10" aria-label={t('footer.nav')}>
+    <nav class="hidden md:flex items-center gap-5 lg:gap-10" aria-label={t('footer.nav')}>
       {
         links.map((l) => (
           <a
-            href={routes[l.key][lang]}
+            href={l.href}
             class:list={[
-              'text-sm tracking-wide hover:text-foreground transition-colors',
+              'text-sm tracking-wide whitespace-nowrap hover:text-foreground transition-colors',
               active === l.key ? 'text-foreground' : 'text-foreground/80',
+              l.only === 'lg' && 'hidden lg:inline',
             ]}
             aria-current={active === l.key ? 'page' : undefined}
           >
@@ -55,13 +58,13 @@ if (lang === 'es' && site.design.blogInNav && (await getPosts()).length > 0) {
         href={whatsappUrl(whatsappMessage[lang])}
         target="_blank"
         rel="noopener noreferrer"
-        class="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        class="hidden lg:inline text-sm whitespace-nowrap text-muted-foreground hover:text-foreground transition-colors"
       >
         {site.phone.display}
       </a>
       <a
         href={routes.appointment[lang]}
-        class="text-sm px-5 py-2.5 rounded-sm bg-foreground text-background hover:bg-primary transition-colors"
+        class="text-sm whitespace-nowrap px-5 py-2.5 rounded-sm bg-foreground text-background hover:bg-primary transition-colors"
       >
         {t('cta.book')}
       </a>
@@ -78,7 +81,7 @@ if (lang === 'es' && site.design.blogInNav && (await getPosts()).length > 0) {
 
   <div id="mobile-menu" class="md:hidden border-t border-border bg-background animate-fade-in" hidden>
     <nav class="container-luxe py-6 flex flex-col gap-4" aria-label={t('menu.aria')}>
-      {links.map((l) => <a href={routes[l.key][lang]} class="text-base text-foreground/80">{l.label}</a>)}
+      {links.map((l) => <a href={l.href} class="text-base text-foreground/80">{l.label}</a>)}
       <a
         href={routes.appointment[lang]}
         class="mt-2 text-center text-sm px-5 py-3 rounded-sm bg-foreground text-background"

@@ -2,7 +2,7 @@
 import logoUrl from '../assets/zmile-logo.svg?url';
 import { getPosts } from '../lib/blog';
 import { site, whatsappMessage, whatsappUrl, type Lang } from '../data/site';
-import { privacyPath, routes, useT } from '../i18n/ui';
+import { aboutPath, privacyPath, routes, useT } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -24,6 +24,7 @@ const showBlog = lang === 'es' && site.design.blogInNav && (await getPosts()).le
       <p class="eyebrow mb-4 compact:mb-1.5">{t('footer.nav')}</p>
       <ul class="space-y-3 compact:space-y-0 compact:grid compact:grid-cols-2 text-sm">
         <li><a href={routes.home[lang]} class="compact:block compact:py-3 hover:text-primary">{t('nav.home')}</a></li>
+        <li><a href={aboutPath[lang]} class="compact:block compact:py-3 hover:text-primary">{t('nav.about')}</a></li>
         <li><a href={routes.specialties[lang]} class="compact:block compact:py-3 hover:text-primary">{t('nav.specialties')}</a></li>
         {showBlog && <li><a href={routes.blog.es} class="compact:block compact:py-3 hover:text-primary">{t('nav.blog')}</a></li>}
         <li><a href={routes.appointment[lang]} class="compact:block compact:py-3 hover:text-primary">{t('cta.book')}</a></li>

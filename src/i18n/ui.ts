@@ -15,6 +15,9 @@ export type RouteKey = keyof typeof routes;
 // El aviso de privacidad solo existe en español: una sola ruta para ambos idiomas.
 export const privacyPath = '/aviso-de-privacidad/';
 
+// Ancla de la sección "Quiénes somos" en el inicio.
+export const aboutPath = { es: '/#quienes-somos', en: '/en/#about' } as const;
+
 const es = {
   // ── Textos del sitio original ──
   'nav.home': 'Inicio',
@@ -22,6 +25,7 @@ const es = {
   'nav.appointment': 'Agenda',
   'nav.contact': 'Contacto',
   'nav.blog': 'Blog',
+  'nav.about': 'Quiénes somos',
   'cta.book': 'Agenda tu cita',
   'cta.bookShort': 'Reservar cita',
   'cta.whatsapp': 'WhatsApp',
@@ -134,6 +138,7 @@ const en: Record<UiKey, string> = {
   'nav.appointment': 'Booking',
   'nav.contact': 'Contact',
   'nav.blog': 'Blog',
+  'nav.about': 'About us',
   'cta.book': 'Book your appointment',
   'cta.bookShort': 'Book appointment',
   'cta.whatsapp': 'WhatsApp',
