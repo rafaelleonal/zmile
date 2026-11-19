@@ -25,8 +25,8 @@ export const reviews: { name: string; es: string; en: string }[] = [
   },
 ];
 
-// Preguntas frecuentes del inicio. Solo incluyen datos que ya están publicados
-// en el sitio (dirección, horario, especialidades, medios de contacto).
+// Preguntas frecuentes del inicio. Solo incluyen datos publicados en el sitio o
+// confirmados por la clínica (idiomas, urgencias y formas de pago).
 export function homeFaqs(lang: Lang): Faq[] {
   const names = specialties.map((s) => s[lang].name);
   if (lang === 'en') {
@@ -54,7 +54,15 @@ export function homeFaqs(lang: Lang): Faq[] {
       },
       {
         q: 'I have a toothache or a dental emergency. What should I do?',
-        a: `Message us on WhatsApp or call ${site.phone.display}. We are open every day from 9:00 am to 8:00 pm and will offer you the earliest available appointment.`,
+        a: `Message us on WhatsApp or call ${site.phone.display}. We see dental emergencies the same day and are open every day from 9:00 am to 8:00 pm.`,
+      },
+      {
+        q: 'Do you speak English?',
+        a: `Yes. We see patients in ${site.languages.en}.`,
+      },
+      {
+        q: 'Which payment methods do you accept?',
+        a: `We accept ${site.payment.en}. We do not currently work with dental insurance.`,
       },
     ];
   }
@@ -82,7 +90,15 @@ export function homeFaqs(lang: Lang): Faq[] {
     },
     {
       q: 'Tengo dolor de muela o una urgencia dental, ¿qué hago?',
-      a: `Escríbenos por WhatsApp o llama al ${site.phone.display}. Abrimos todos los días de 9:00 a 20:00 y te daremos la cita disponible más próxima.`,
+      a: `Escríbenos por WhatsApp o llama al ${site.phone.display}. Atendemos urgencias el mismo día y abrimos todos los días de 9:00 a 20:00.`,
+    },
+    {
+      q: '¿Atienden en inglés?',
+      a: `Sí. Atendemos pacientes en ${site.languages.es}.`,
+    },
+    {
+      q: '¿Qué formas de pago aceptan?',
+      a: `Aceptamos ${site.payment.es}. Por el momento no trabajamos con seguros dentales.`,
     },
   ];
 }

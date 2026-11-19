@@ -69,19 +69,39 @@ export const site = {
 
   stats: { specialists: '+10', specialties: '9' },
 
-  // Decisiones de diseño pendientes de aprobación. Con `false` se vuelve al original.
+  // Datos confirmados por la clínica (noviembre de 2026).
+  languages: {
+    es: 'español e inglés',
+    en: 'Spanish and English',
+    schema: ['Spanish', 'English'],
+  },
+  sameDayEmergencies: true,
+  payment: {
+    es: 'todas las tarjetas, transferencia y efectivo',
+    en: 'all cards, bank transfer and cash',
+    schema: 'Cash, Credit Card, Debit Card, Bank Transfer',
+    insurance: false, // Por ahora no trabajan con seguros dentales.
+  },
+
+  // Decisiones de diseño. Con `false` se vuelve al original.
   design: {
     // Botones de WhatsApp con el verde y el logotipo de WhatsApp (original: negro / contorno).
+    // Aprobado por la clínica.
     whatsappGreen: true,
     // Barra fija inferior en celular con "Agenda tu cita" + "WhatsApp".
     mobileCtaBar: true,
     // Ajustes de espaciado, cuadrículas y áreas táctiles SOLO en celular (clases `compact:`).
     mobileCompact: true,
+    // Enlaces a redes sociales en el pie de página.
+    footerSocial: true,
   },
 
-  // Perfiles oficiales (Instagram, Facebook…). Agregar aquí cuando se confirmen:
-  // se publican en el JSON-LD (sameAs) y en llms.txt.
-  social: [] as string[],
+  // Perfiles oficiales de la clínica: se publican en el pie, en el JSON-LD (sameAs)
+  // y en llms.txt. Solo cuentas verificadas; falta la dirección exacta de Facebook.
+  social: [{ label: 'Instagram', url: 'https://www.instagram.com/zmile.dental.clinic/' }] as {
+    label: string;
+    url: string;
+  }[],
 } as const;
 
 export type Lang = 'es' | 'en';

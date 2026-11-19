@@ -52,7 +52,11 @@ export function clinicSchema(base: URL | string, lang: Lang) {
       contactType: lang === 'en' ? 'appointments' : 'citas',
       telephone: site.phone.e164,
       url: `https://wa.me/${site.phone.raw}`,
+      availableLanguage: site.languages.schema,
     },
+    knowsLanguage: ['es', 'en'],
+    paymentAccepted: site.payment.schema,
+    currenciesAccepted: 'MXN',
     knowsAbout: specialties.map((s) => s[lang].name),
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
@@ -67,7 +71,7 @@ export function clinicSchema(base: URL | string, lang: Lang) {
         },
       })),
     },
-    sameAs: [site.google.profileUrl, ...site.social],
+    sameAs: [site.google.profileUrl, ...site.social.map((s) => s.url)],
   };
 }
 

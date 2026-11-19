@@ -19,8 +19,12 @@ function facts(base: URL): string[] {
     `- Teléfono y WhatsApp: +52 ${site.phone.display} (https://wa.me/${site.phone.raw})`,
     `- Email: ${site.email}`,
     `- Horario: ${site.hours.long.es}`,
+    `- Idiomas de atención: ${site.languages.es}`,
+    `- Urgencias dentales: se atienden el mismo día`,
+    `- Formas de pago: ${site.payment.es}; por ahora no trabaja con seguros dentales`,
     `- Citas: ${u(base, routes.appointment.es)} (el formulario se envía por WhatsApp) o directo por WhatsApp/teléfono`,
     `- Google Maps y reseñas: ${site.google.profileUrl}`,
+    ...site.social.map((s) => `- ${s.label}: ${s.url}`),
     `- Idiomas del sitio: español (${u(base, '/')}) e inglés (${u(base, '/en/')})`,
   ];
 }
@@ -97,7 +101,7 @@ export function llmsFullTxt(base: URL): string {
 
   out.push('## English summary', '');
   out.push(
-    `${site.name} is a specialty dental clinic at ${site.address.display.en} (postal code ${site.address.postalCode}). It is open ${site.hours.long.en}. Appointments: WhatsApp or phone +52 ${site.phone.display}, or ${u(base, routes.appointment.en)}.`,
+    `${site.name} is a specialty dental clinic at ${site.address.display.en} (postal code ${site.address.postalCode}). It is open ${site.hours.long.en}, sees patients in ${site.languages.en} and treats dental emergencies the same day. Payment: ${site.payment.en}; no dental insurance for now. Appointments: WhatsApp or phone +52 ${site.phone.display}, or ${u(base, routes.appointment.en)}.`,
     '',
     'Specialties:',
     '',

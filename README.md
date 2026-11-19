@@ -24,7 +24,7 @@ Sitio 100 % estático: sin base de datos ni servidor.
 - **Reseñas y preguntas frecuentes del inicio**: `src/data/content.ts`.
 - **Textos de interfaz ES/EN y rutas**: `src/i18n/ui.ts`.
 - **Colores y tipografía**: `src/styles/global.css`.
-- **Dominio final**: `SITE` en `astro.config.mjs` (o variable de entorno `SITE_URL` al hacer build).
+- **Dominio final**: `zmileclinic.com`, definido como `SITE` en `astro.config.mjs` (o variable de entorno `SITE_URL` al hacer build).
 - **Favicon, logo e imagen para compartir**: `node scripts/generate-brand-assets.mjs`.
 
 ## Rutas

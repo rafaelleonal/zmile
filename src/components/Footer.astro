@@ -41,6 +41,16 @@ const year = new Date().getFullYear();
             WhatsApp
           </a>
         </li>
+        {
+          site.design.footerSocial &&
+            site.social.map((s) => (
+              <li>
+                <a href={s.url} target="_blank" rel="noopener noreferrer" class="compact:block compact:py-3 hover:text-primary">
+                  {s.label}
+                </a>
+              </li>
+            ))
+        }
         <li class="compact:py-2">{site.hours.display[lang]}</li>
       </ul>
     </div>
