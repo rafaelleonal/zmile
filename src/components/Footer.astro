@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import logo from '../assets/zmile-logo.png';
 import { site, whatsappMessage, whatsappUrl, type Lang } from '../data/site';
-import { routes, useT } from '../i18n/ui';
+import { privacyPath, routes, useT } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -58,7 +58,12 @@ const year = new Date().getFullYear();
   <div class="border-t border-border">
     <div class="container-luxe py-6 text-xs text-muted-foreground flex flex-wrap items-center justify-between gap-2">
       <span>© {year} {site.name}. {t('footer.rights')}</span>
-      <span>{t('footer.location')}</span>
+      <span class="flex flex-wrap items-center gap-x-4 gap-y-1">
+        <span>{t('footer.location')}</span>
+        <a href={privacyPath} class="compact:py-3 underline underline-offset-4 hover:text-primary">
+          {t('footer.privacy')}
+        </a>
+      </span>
     </div>
   </div>
 </footer>

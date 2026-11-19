@@ -4,7 +4,7 @@ import Icon from '../components/Icon.astro';
 import WhatsAppIcon from '../components/WhatsAppIcon.astro';
 import { site, whatsappMessage, whatsappUrl, type Lang } from '../data/site';
 import { specialties } from '../data/specialties';
-import { routes, useT } from '../i18n/ui';
+import { privacyPath, routes, useT } from '../i18n/ui';
 import { breadcrumbSchema } from '../lib/seo';
 
 interface Props {
@@ -129,6 +129,9 @@ const wa = {
           {t('appt.submit')}
         </button>
         <p class="mt-4 text-xs text-muted-foreground leading-relaxed">{t('appt.submitNote')}</p>
+        <p class="mt-2 text-xs text-muted-foreground leading-relaxed">
+          {t('appt.privacy')}{' '}<a href={privacyPath} target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-primary">{t('footer.privacy').toLowerCase()}</a>{t('footer.privacySuffix')}.
+        </p>
         <noscript>
           <p class="mt-4 text-sm text-muted-foreground">
             {t('appt.noscript')}

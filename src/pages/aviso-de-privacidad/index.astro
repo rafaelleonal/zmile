@@ -1,0 +1,174 @@
+---
+import Base from '../../layouts/Base.astro';
+import { privacyPath, routes } from '../../i18n/ui';
+
+// Aviso de privacidad de la clínica. El texto es el del documento que entregó la
+// clínica (última actualización: 9 de mayo de 2026) y debe conservarse tal cual:
+// cualquier cambio de redacción lo decide la clínica, no el sitio.
+// El aviso solo existe en español, por eso la página no declara versión en inglés.
+
+const h2 = 'text-2xl font-light tracking-tight text-foreground';
+const list = 'list-disc pl-5 space-y-2';
+---
+
+<Base
+  lang="es"
+  title="Aviso de privacidad | Zmile Dental Clinic"
+  description="Aviso de privacidad de Zmile Dental Clinic: qué datos personales se recaban, para qué se usan y cómo ejercer los derechos ARCO."
+  alternates={{ es: privacyPath, en: routes.home.en }}
+  translated={false}
+>
+  <article class="container-luxe py-20 md:py-28 compact:pt-11 compact:pb-16">
+    <p class="eyebrow">Zmile Dental Clinic</p>
+    <h1 class="mt-4 text-4xl md:text-6xl font-light tracking-tight">Aviso de privacidad</h1>
+
+    <div class="mt-12 compact:mt-8 max-w-3xl space-y-10 compact:space-y-8 text-foreground/80 leading-relaxed">
+      <p>
+        En cumplimiento con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP),
+        publicada en el Diario Oficial de la Federación el 5 de julio de 2010, y su Reglamento, ZMILE DENTAL CLINIC con
+        domicilio en Tepic 139 Interior 408, Roma Sur, C P. 06760, Ciudad de Mexico, hace de su conocimiento que es
+        responsable de recabar, usar, almacenar y proteger sus datos personales, bajo los principios de licitud,
+        consentimiento, información, calidad, finalidad, lealtad, proporcionalidad y responsabilidad, conforme a lo
+        dispuesto en los artículos 6, 7, 8 y 16 de la LFPDPPP.
+      </p>
+
+      <section class="space-y-4">
+        <h2 class={h2}>1. Identidad y domicilio del responsable</h2>
+        <p>ZMILE DENTAL CLINIC</p>
+        <address class="not-italic space-y-1">
+          <p>Domicilio: Tepic 139 Interior 408, Roma Sur, C P. 06760, Ciudad de Mexico</p>
+          <p>Correo electrónico: administración@zmileclinic.com</p>
+          <p>Teléfono: 55 2861 0927</p>
+        </address>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class={h2}>2. Datos personales recabados</h2>
+        <p>Para brindarle nuestros servicios odontológicos, recabaremos los siguientes datos personales:</p>
+        <ul class={list}>
+          <li>
+            Datos de identificación: Nombre completo, edad, género, fecha de nacimiento, CURP, RFC (en caso de
+            facturación).
+          </li>
+          <li>Datos de contacto: Domicilio, número de teléfono, correo electrónico.</li>
+          <li>
+            Datos de salud: Historial clínico dental, antecedentes médicos relevantes, tratamientos previos, alergias,
+            medicamentos en uso, y cualquier información relacionada con su salud bucal.
+          </li>
+          <li>
+            Datos de pago: Información de facturación (en caso de aplicar), como datos bancarios o de tarjeta para
+            procesar pagos.
+          </li>
+        </ul>
+        <p>
+          Los datos de salud son considerados datos personales sensibles conforme al artículo 3, fracción VI de la
+          LFPDPPP, y serán tratados con estricta confidencialidad y únicamente para los fines descritos en este aviso.
+        </p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class={h2}>3. Finalidades del tratamiento de datos</h2>
+        <p>Sus datos personales serán utilizados para las siguientes finalidades:</p>
+        <p>Primarias (necesarias para la prestación del servicio):</p>
+        <ul class={list}>
+          <li>Prestación de servicios odontológicos (diagnóstico, tratamiento, seguimiento).</li>
+          <li>Creación y actualización de su historial clínico dental.</li>
+          <li>Agendar citas y enviar recordatorios.</li>
+          <li>Facturación y cobranza de servicios.</li>
+        </ul>
+        <p>Secundarias (no esenciales para el servicio):</p>
+        <ul class={list}>
+          <li>Envío de promociones, descuentos o información sobre nuevos servicios de la clínica.</li>
+          <li>Encuestas de satisfacción para mejorar la calidad de nuestros servicios.</li>
+        </ul>
+        <p>
+          Si no desea que sus datos sean tratados para las finalidades secundarias, puede manifestar su negativa
+          enviando un correo a administración@zmileclinic.com o presentándose en nuestro domicilio.
+        </p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class={h2}>4. Transferencia de datos</h2>
+        <p>
+          Sus datos personales no serán transferidos a terceros, salvo en los siguientes casos, conforme al artículo 37
+          de la LFPDPPP:
+        </p>
+        <ul class={list}>
+          <li>
+            Cuando sea necesario para la prestación de servicios médicos (por ejemplo, laboratorios clínicos o
+            especialistas referidos).
+          </li>
+          <li>Cuando lo requiera una autoridad competente, en cumplimiento de una obligación legal.</li>
+          <li>
+            Para fines de facturación electrónica, conforme a las disposiciones del Servicio de Administración
+            Tributaria (SAT).
+          </li>
+        </ul>
+        <p>
+          En estos casos, se garantizará que los terceros cumplan con las medidas de seguridad y confidencialidad
+          establecidas en la LFPDPPP.
+        </p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class={h2}>5. Medios para ejercer los derechos ARCO</h2>
+        <p>
+          Usted tiene derecho a Acceder, Rectificar, Cancelar u Oponerse (derechos ARCO) al tratamiento de sus datos
+          personales, conforme a los artículos 22 al 28 de la LFPDPPP. Para ejercer estos derechos, deberá presentar una
+          solicitud por escrito en nuestro domicilio o enviarla al correo: administración@zmileclinic.com
+        </p>
+        <p>Incluyendo:</p>
+        <ul class={list}>
+          <li>Nombre completo y datos de contacto.</li>
+          <li>Copia de identificación oficial (INE, pasaporte, etc.).</li>
+          <li>
+            Descripción clara del derecho ARCO que desea ejercer y, en su caso, los datos específicos a modificar o
+            cancelar.
+          </li>
+        </ul>
+        <p>
+          Responderemos a su solicitud en un plazo máximo de 20 días hábiles, conforme al artículo 32 de la LFPDPPP.
+        </p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class={h2}>6. Revocación del consentimiento</h2>
+        <p>
+          Usted puede revocar el consentimiento para el tratamiento de sus datos personales en cualquier momento,
+          siempre que no contravenga disposiciones legales. Para ello, siga el mismo procedimiento descrito para los
+          derechos ARCO. La revocación no tendrá efectos retroactivos, conforme al artículo 8 de la LFPDPPP.
+        </p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class={h2}>7. Medidas de seguridad</h2>
+        <p>
+          Implementamos medidas de seguridad administrativas, técnicas y físicas para proteger sus datos personales
+          contra daño, pérdida, alteración, destrucción o uso no autorizado, conforme al artículo 19 de la LFPDPPP y los
+          artículos 20 al 26 del Reglamento de la LFPDPPP.
+        </p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class={h2}>8. Cambios al aviso de privacidad</h2>
+        <p>
+          Nos reservamos el derecho de modificar este aviso de privacidad en cualquier momento. Los cambios serán
+          comunicados a través de nuestro correo electrónico administración@zmileclinic.com o mediante notificación
+          directa en nuestro establecimiento, conforme al artículo 17 de la LFPDPPP.
+        </p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class={h2}>9. Contacto</h2>
+        <p>Para cualquier duda o aclaración sobre el tratamiento de sus datos personales, contáctenos</p>
+        <address class="not-italic space-y-1">
+          <p>Correo electrónico: administración@zmileclinic.com</p>
+          <p>Teléfono: 55 2861 0927</p>
+          <p>Domicilio: Tepic 139 Interior 408, Roma Sur, C P. 06760, Ciudad de Mexico</p>
+        </address>
+      </section>
+
+      <p class="text-sm text-muted-foreground">Fecha de última actualización: 9 de Mayo de 2026</p>
+    </div>
+  </article>
+</Base>

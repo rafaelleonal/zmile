@@ -1,7 +1,7 @@
 import { homeFaqs } from '../data/content';
 import { site } from '../data/site';
 import { specialties, specialtyPath } from '../data/specialties';
-import { routes } from '../i18n/ui';
+import { privacyPath, routes } from '../i18n/ui';
 
 // Genera /llms.txt y /llms-full.txt (formato https://llmstxt.org): un resumen en
 // Markdown, sin diseño, pensado para que ChatGPT, Claude, Perplexity, Gemini y
@@ -48,6 +48,7 @@ export function llmsTxt(base: URL): string {
     `- [Inicio](${u(base, routes.home.es)}): presentación de la clínica, especialidades, reseñas de pacientes, ubicación y preguntas frecuentes`,
     `- [Agenda tu cita](${u(base, routes.appointment.es)}): formulario para solicitar cita`,
     `- [Contacto y ubicación](${u(base, routes.contact.es)}): dirección, teléfono, WhatsApp, horario y mapa`,
+    `- [Aviso de privacidad](${u(base, privacyPath)}): tratamiento de datos personales y derechos ARCO`,
     `- [Especialidades](${u(base, routes.specialties.es)}): listado de las nueve especialidades`,
     '',
     '## English',

@@ -20,11 +20,13 @@ interface Props {
   /** Nodos JSON-LD adicionales para esta página. */
   schema?: object[];
   noindex?: boolean;
+  /** `false` si la página existe en un solo idioma: no declara versiones alternas (hreflang). */
+  translated?: boolean;
   /** La página abre con botones de cita propios: la barra fija espera a que salgan de pantalla. */
   heroCta?: boolean;
 }
 
-const { lang, title, description, alternates, active, schema = [], noindex = false, heroCta = false } = Astro.props;
+const { lang, title, description, alternates, active, schema = [], noindex = false, heroCta = false, translated = true } = Astro.props;
 const compact = site.design.mobileCompact;
 
 // En la página del formulario la barra estorbaría al teclado y sería redundante.
@@ -55,9 +57,15 @@ const jsonLd = {
     <meta name="author" content={site.name} />
     {noindex ? <meta name="robots" content="noindex" /> : <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />}
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="es-MX" href={new URL(alternates.es, base).href} />
-    <link rel="alternate" hreflang="en" href={new URL(alternates.en, base).href} />
-    <link rel="alternate" hreflang="x-default" href={new URL(alternates.es, base).href} />
+    {
+      translated && (
+        <>
+          <link rel="alternate" hreflang="es-MX" href={new URL(alternates.es, base).href} />
+          <link rel="alternate" hreflang="en" href={new URL(alternates.en, base).href} />
+          <link rel="alternate" hreflang="x-default" href={new URL(alternates.es, base).href} />
+        </>
+      )
+    }
 
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

@@ -10,6 +10,9 @@ export const routes = {
 
 export type RouteKey = keyof typeof routes;
 
+// El aviso de privacidad solo existe en español: una sola ruta para ambos idiomas.
+export const privacyPath = '/aviso-de-privacidad/';
+
 const es = {
   // ── Textos del sitio original ──
   'nav.home': 'Inicio',
@@ -87,6 +90,9 @@ const es = {
     'Completa el formulario y envíalo por WhatsApp: nuestro equipo te responderá por ese medio para confirmar tu cita.',
   'appt.optional': 'opcional',
   'appt.submitNote': 'Al enviar se abrirá WhatsApp con tu solicitud lista. Solo presiona enviar.',
+  'appt.privacy': 'Al enviar aceptas el tratamiento de tus datos conforme a nuestro',
+  'footer.privacy': 'Aviso de privacidad',
+  'footer.privacySuffix': '',
   'appt.successTitle': 'Ya casi: envía tu mensaje',
   'appt.successBody':
     'Abrimos WhatsApp con los datos de tu cita. Envía el mensaje y nuestro equipo te confirmará fecha y hora.',
@@ -194,6 +200,9 @@ const en: Record<UiKey, string> = {
     'Fill out the form and send it via WhatsApp: our team will reply there to confirm your appointment.',
   'appt.optional': 'optional',
   'appt.submitNote': 'Submitting opens WhatsApp with your request ready. Just press send.',
+  'appt.privacy': 'By submitting you agree to the processing of your data under our',
+  'footer.privacy': 'Privacy notice',
+  'footer.privacySuffix': ' (in Spanish)',
   'appt.successTitle': 'Almost there: send your message',
   'appt.successBody':
     'We opened WhatsApp with your appointment details. Send the message and our team will confirm the date and time.',
