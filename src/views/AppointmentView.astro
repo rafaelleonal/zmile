@@ -39,6 +39,15 @@ const input =
   'w-full bg-transparent border-0 border-b border-border focus:border-foreground focus:outline-none py-3 text-base placeholder:text-muted-foreground/60 transition-colors rounded-none';
 const label = 'block text-xs uppercase tracking-[0.22em] text-muted-foreground mb-2';
 
+// Con agenda en línea (Dentalink) la página ofrece una sola forma de reservar; el
+// formulario a WhatsApp solo aparece si no hay liga de Dentalink o si se pide con la bandera.
+const online = Boolean(site.booking.dentalinkUrl);
+const showForm = !online || site.booking.whatsappForm;
+const waBooking =
+  lang === 'en' ? "Hi, I'd like to book an appointment at Zmile Dental Clinic." : 'Hola, quiero agendar una cita en Zmile Dental Clinic.';
+// Para /agenda/?s=<especialidad>: nombre de cada especialidad, por id.
+const specialtyNames = Object.fromEntries(specialties.map((sp) => [sp.id, sp[lang].name]));
+
 // Etiquetas del mensaje de WhatsApp, que arma el script del formulario.
 const wa = {
   greeting: t('appt.wa.greeting'),
@@ -69,13 +78,13 @@ const wa = {
     <div class="lg:col-span-4">
       <p class="eyebrow">{t('appt.eyebrow')}</p>
       <h1 class="mt-4 text-4xl md:text-5xl font-light tracking-tight">{t('appt.title')}</h1>
-      <p class="mt-6 text-muted-foreground leading-relaxed">{t('appt.intro')}</p>
+      <p class="mt-6 text-muted-foreground leading-relaxed">{t(online && !showForm ? 'appt.introOnline' : 'appt.intro')}</p>
       <div class="mt-10 space-y-3 text-sm text-muted-foreground">
         <p class="text-foreground">{t('appt.hours')}: {site.hours.display[lang]}</p>
         <address class="text-foreground not-italic">{site.address.display[lang]}</address>
       </div>
       {
-        site.booking.dentalinkUrl && (
+        online && showForm && (
           <div class="mt-10 compact:mt-8 border border-border bg-secondary/40 p-6">
             <p class="eyebrow">{t('appt.online.eyebrow')}</p>
             <p class="mt-3 text-sm text-muted-foreground leading-relaxed">{t('appt.online.body')}</p>
@@ -98,6 +107,71 @@ const wa = {
       }
     </div>
 
+    {
+      online && !showForm && (
+        <div class="lg:col-span-8">
+          <div class="border border-border bg-secondary/40 p-8 md:p-12 compact:p-6">
+            <p class="eyebrow">{t('appt.online.eyebrow')}</p>
+            <h2 class="mt-4 text-3xl md:text-4xl font-light tracking-tight">{t('appt.online.title')}</h2>
+            <ol class="mt-8 compact:mt-6 border-t border-border">
+              {[t('appt.online.step1'), t('appt.online.step2'), t('appt.online.step3')].map((step, i) => (
+                <li class="flex items-baseline gap-5 border-b border-border py-4">
+                  <span class="eyebrow w-5 shrink-0 text-primary">0{i + 1}</span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+            <a
+              href={site.booking.dentalinkUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group mt-10 compact:mt-8 inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-sm bg-foreground text-background px-10 py-5 text-sm tracking-wide hover:bg-primary transition-colors"
+            >
+              {t('appt.online.cta')}
+              <Icon
+                name="arrow-up-right"
+                size={16}
+                class="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </a>
+            <p class="mt-4 text-xs text-muted-foreground leading-relaxed">{t('appt.online.note')}</p>
+          </div>
+
+          <div class="mt-10 compact:mt-8 flex flex-wrap items-center justify-between gap-x-10 gap-y-5">
+            <div>
+              <p class="text-lg">{t('appt.help.title')}</p>
+              <p class="mt-1 text-sm text-muted-foreground">{t('appt.help.body')}</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-x-6 gap-y-3 compact:w-full">
+              <a
+                href={whatsappUrl(waBooking)}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-appt-wa
+                data-base={waBooking}
+                data-specialties={JSON.stringify(specialtyNames)}
+                data-phone={site.phone.raw}
+                class:list={[
+                  'inline-flex items-center justify-center gap-2 rounded-sm px-7 py-4 text-sm tracking-wide transition-colors compact:w-full',
+                  site.design.whatsappGreen
+                    ? 'bg-whatsapp text-white font-medium hover:bg-whatsapp-hover'
+                    : 'border border-foreground/20 hover:border-foreground',
+                ]}
+              >
+                <WhatsAppIcon size={16} />
+                WhatsApp
+              </a>
+              <a href={`tel:${site.phone.e164}`} class="text-sm text-muted-foreground hover:text-primary compact:py-2">
+                {t('appt.help.call')} {site.phone.display}
+              </a>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    {
+      showForm && (
     <form
       class="lg:col-span-8 grid sm:grid-cols-2 gap-x-8 gap-y-8 compact:gap-y-[22px]"
       data-appt-form
@@ -162,6 +236,8 @@ const wa = {
         </noscript>
       </div>
     </form>
+      )
+    }
   </div>
 
   <div class="container-luxe py-32 text-center" data-appt-success hidden>
@@ -185,6 +261,18 @@ const wa = {
 
 <script>
   document.addEventListener('astro:page-load', () => {
+    // Sin formulario: si se llegó desde una especialidad (/agenda/?s=…), el botón de
+    // WhatsApp la menciona en el mensaje.
+    const wa = document.querySelector<HTMLAnchorElement>('[data-appt-wa]');
+    const picked = new URLSearchParams(location.search).get('s');
+    if (wa && picked) {
+      const name = (JSON.parse(wa.dataset.specialties!) as Record<string, string>)[picked];
+      if (name) {
+        const text = `${wa.dataset.base} (${name})`;
+        wa.href = `https://wa.me/${wa.dataset.phone}?text=${encodeURIComponent(text)}`;
+      }
+    }
+
     const form = document.querySelector<HTMLFormElement>('[data-appt-form]');
     if (!form) return;
 

@@ -75,6 +75,10 @@ export const site = {
   // "Ver horarios disponibles" y se declara la reserva en línea en los datos para Google.
   booking: {
     dentalinkUrl: 'https://ff.healthatom.io/JsRKwL' as string,
+    // Con agenda en línea, la página de agenda muestra una sola forma de reservar
+    // (Dentalink) y WhatsApp como ayuda. Con `true` vuelve además el formulario que
+    // arma el mensaje de WhatsApp. Sin liga de Dentalink, el formulario se muestra siempre.
+    whatsappForm: false as boolean,
   },
 
   // Datos confirmados por la clínica (noviembre de 2026).
