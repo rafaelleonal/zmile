@@ -109,14 +109,14 @@ const wa = {
 
     {
       online && !showForm && (
-        <div class="lg:col-span-8">
-          <div class="border border-border bg-secondary/40 p-8 md:p-12 compact:p-6">
+        <>
+          <div class="lg:col-span-8 lg:row-span-2 border border-border bg-secondary/40 p-8 md:p-12 compact:p-6">
             <p class="eyebrow">{t('appt.online.eyebrow')}</p>
             <h2 class="mt-4 text-3xl md:text-4xl font-light tracking-tight">{t('appt.online.title')}</h2>
             <ol class="mt-8 compact:mt-6 border-t border-border">
               {[t('appt.online.step1'), t('appt.online.step2'), t('appt.online.step3')].map((step, i) => (
                 <li class="flex items-baseline gap-5 border-b border-border py-4">
-                  <span class="eyebrow w-5 shrink-0 text-primary">0{i + 1}</span>
+                  <span class="w-6 shrink-0 text-xs font-medium tabular-nums text-primary">0{i + 1}</span>
                   <span>{step}</span>
                 </li>
               ))}
@@ -137,12 +137,13 @@ const wa = {
             <p class="mt-4 text-xs text-muted-foreground leading-relaxed">{t('appt.online.note')}</p>
           </div>
 
-          <div class="mt-10 compact:mt-8 flex flex-wrap items-center justify-between gap-x-10 gap-y-5">
-            <div>
+          {/* En computadora ocupa el espacio libre de la columna izquierda, alineado al pie del recuadro. */}
+          <div class="lg:col-span-4 lg:self-end">
+            <div class="lg:border-t lg:border-border lg:pt-6">
               <p class="text-lg">{t('appt.help.title')}</p>
               <p class="mt-1 text-sm text-muted-foreground">{t('appt.help.body')}</p>
             </div>
-            <div class="flex flex-wrap items-center gap-x-6 gap-y-3 compact:w-full">
+            <div class="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
               <a
                 href={whatsappUrl(waBooking)}
                 target="_blank"
@@ -161,12 +162,15 @@ const wa = {
                 <WhatsAppIcon size={16} />
                 WhatsApp
               </a>
-              <a href={`tel:${site.phone.e164}`} class="text-sm text-muted-foreground hover:text-primary compact:py-2">
+              <a
+                href={`tel:${site.phone.e164}`}
+                class="text-sm text-foreground underline decoration-border underline-offset-4 hover:text-primary hover:decoration-primary compact:py-2"
+              >
                 {t('appt.help.call')} {site.phone.display}
               </a>
             </div>
           </div>
-        </div>
+        </>
       )
     }
 
