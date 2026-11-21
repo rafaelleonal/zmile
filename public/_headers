@@ -1,0 +1,14 @@
+# Encabezados para Cloudflare Pages
+# https://developers.cloudflare.com/pages/configuration/headers/
+# (Vercel no lee este archivo; allá se usa vercel.json.)
+
+# Las direcciones de prueba (*.pages.dev y sus despliegues) no se indexan en Google.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+# Archivos con huella en el nombre, generados por Astro: se pueden guardar un año.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable

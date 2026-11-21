@@ -3,14 +3,20 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-// Dominio final del sitio: zmileclinic.com, que ya es de la clínica (registrado en
-// Squarespace, con el correo en Google). De él dependen canonical, hreflang, sitemap
-// y llms.txt. Se puede sobrescribir con la variable SITE_URL al hacer build.
-// Mientras no haya dominio, en Vercel se usa la liga del propio despliegue para que
-// los enlaces y la imagen al compartir funcionen en la versión de prueba.
+// Dirección del sitio: de ella dependen canonical, hreflang, sitemap, imagen al compartir
+// y llms.txt. Orden de prioridad:
+//   1. Variable SITE_URL (en Cloudflare: Settings → Variables and Secrets). Mientras se
+//      prueba en *.pages.dev, ponerla con esa dirección; al conectar el dominio, cambiarla
+//      por el dominio definitivo.
+//   2. Vercel: la liga del propio despliegue (versión de prueba).
+//   3. Cloudflare Pages, ramas que no son main: la liga de ese despliegue.
+//   4. Dominio por defecto: zmileclinic.com.
 const vercelHost =
   process.env.VERCEL_ENV === 'production' ? process.env.VERCEL_PROJECT_PRODUCTION_URL : process.env.VERCEL_URL;
-const SITE = process.env.SITE_URL ?? (vercelHost ? `https://${vercelHost}` : 'https://zmileclinic.com');
+const cloudflarePreview =
+  process.env.CF_PAGES && process.env.CF_PAGES_BRANCH !== 'main' ? process.env.CF_PAGES_URL : undefined;
+const SITE =
+  process.env.SITE_URL || (vercelHost ? `https://${vercelHost}` : cloudflarePreview) || 'https://zmileclinic.com';
 
 // https://astro.build/config
 export default defineConfig({

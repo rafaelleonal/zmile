@@ -70,6 +70,37 @@ Los datos y textos de la directora están en `src/data/team.ts`; su foto, en
 `/agenda/` arma un mensaje con los datos y abre WhatsApp (`wa.me`) hacia el número de la
 clínica. No guarda nada ni requiere servidor.
 
-## Despliegue
+## Publicación (Cloudflare Pages)
 
-Cualquier hosting estático sirve: comando de build `pnpm build`, carpeta de salida `dist`.
+El sitio se publica gratis en Cloudflare Pages, conectado a este repositorio: cada push a
+`main`, incluidos los artículos guardados desde Pages CMS, se publica solo en 1–2 minutos.
+
+Configuración inicial (una sola vez):
+
+1. Crear una cuenta en https://dash.cloudflare.com/sign-up (de preferencia con un correo
+   de la clínica, para que el sitio no dependa de una cuenta personal).
+2. **Workers & Pages → Create application → pestaña Pages → Import an existing Git
+   repository.** Autorizar GitHub y elegir el repositorio `zmile`.
+3. En *Set up builds and deployments*:
+   - Framework preset: `Astro`
+   - Production branch: `main`
+   - Build command: `pnpm build`
+   - Build output directory: `dist`
+4. **Save and Deploy.** El sitio queda en `https://<proyecto>.pages.dev`.
+5. En el proyecto → **Settings → Variables and Secrets**, agregar `SITE_URL` con esa
+   dirección `https://<proyecto>.pages.dev` y volver a desplegar (para que enlaces e imagen
+   al compartir apunten a la versión de prueba).
+6. Cuando haya dominio: **Custom domains → Set up a custom domain**, seguir los pasos de
+   DNS que indique Cloudflare (si el dominio está en otro registrador, agregar ahí los
+   registros sin tocar los del correo) y cambiar `SITE_URL` por el dominio definitivo,
+   por ejemplo `https://zmileclinic.com`.
+
+Ya incluido en el repositorio:
+
+- `.node-version` (Node 24) y `packageManager` en `package.json` (pnpm), que Cloudflare lee.
+- `public/_headers`: las direcciones `*.pages.dev` no se indexan en Google y los archivos
+  de `/_astro/` se guardan en caché un año.
+- Las páginas 404 y las redirecciones del sitio anterior funcionan sin configuración extra.
+
+Versión de prueba anterior: `vercel.json` y la liga `zmile-clinic.vercel.app` (se puede
+borrar el proyecto de Vercel cuando el sitio esté en Cloudflare).
