@@ -1,6 +1,8 @@
 ---
 import logoUrl from '../assets/zmile-logo.svg?url';
 import { getPosts } from '../lib/blog';
+import SocialIcon from './SocialIcon.astro';
+import WhatsAppIcon from './WhatsAppIcon.astro';
 import { site, whatsappMessage, whatsappUrl, type Lang } from '../data/site';
 import { aboutPath, privacyPath, routes, useT } from '../i18n/ui';
 
@@ -40,7 +42,8 @@ const showBlog = lang === 'es' && site.design.blogInNav && (await getPosts()).le
         <li><a href={`tel:${site.phone.e164}`} class="compact:block compact:py-3 hover:text-primary">{site.phone.display}</a></li>
         <li><a href={`mailto:${site.email}`} class="compact:block compact:py-3 hover:text-primary">{site.email}</a></li>
         <li>
-          <a href={whatsappUrl(whatsappMessage[lang])} target="_blank" rel="noopener noreferrer" class="compact:block compact:py-3 hover:text-primary">
+          <a href={whatsappUrl(whatsappMessage[lang])} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 compact:flex compact:py-3 hover:text-primary">
+            <WhatsAppIcon size={15} class="shrink-0" />
             WhatsApp
           </a>
         </li>
@@ -48,7 +51,8 @@ const showBlog = lang === 'es' && site.design.blogInNav && (await getPosts()).le
           site.design.footerSocial &&
             site.social.map((s) => (
               <li>
-                <a href={s.url} target="_blank" rel="noopener noreferrer" class="compact:block compact:py-3 hover:text-primary">
+                <a href={s.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 compact:flex compact:py-3 hover:text-primary">
+                  <SocialIcon name={s.icon} size={15} class="shrink-0" />
                   {s.label}
                 </a>
               </li>

@@ -2,10 +2,12 @@
 // Todo el sitio, el JSON-LD, llms.txt y el formulario leen de aquí: si un dato cambia,
 // se cambia solo en este archivo y queda consistente en todas partes.
 
+import type { SocialNetwork } from '../components/SocialIcon.astro';
+
 export const site = {
   name: 'Zmile Dental Clinic',
   legalName: 'Zmile Dental Clinic',
-  email: 'zmileclinic@gmail.com',
+  email: 'administracion@zmileclinic.com',
 
   phone: {
     e164: '+525528610927',
@@ -112,9 +114,11 @@ export const site = {
 
   // Perfiles oficiales de la clínica: se publican en el pie, en el JSON-LD (sameAs)
   // y en llms.txt. Solo cuentas verificadas; falta la dirección exacta de Facebook.
-  social: [{ label: 'Instagram', url: 'https://www.instagram.com/zmile.dental.clinic/' }] as {
+  // `icon` elige el logotipo oficial de SocialIcon.astro (instagram, facebook, tiktok).
+  social: [{ label: 'Instagram', url: 'https://www.instagram.com/zmile.dental.clinic/', icon: 'instagram' }] as {
     label: string;
     url: string;
+    icon: SocialNetwork;
   }[],
 } as const;
 
